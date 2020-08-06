@@ -26,7 +26,7 @@ import { Component } from '@angular/core';
 //       }
 //     }
 //   };
-  
+
 //   data = [
 //     {
 //       id: 1,
@@ -65,20 +65,20 @@ export class FirmwareComponent {
       }
     }
   };
-  
+
   data = [
     {
       id: 1,
-      name: "Leanne Graham",
-      username: "Bret",
-      email: "Sincere@april.biz"
+      name: 'Leanne Graham',
+      username: 'Bret',
+      email: 'Sincere@april.biz'
     },
     // ... other rows here
     {
       id: 11,
-      name: "Nicholas DuBuque",
-      username: "Nicholas.Stanton",
-      email: "Rey.Padberg@rosamond.biz"
+      name: 'Nicholas DuBuque',
+      username: 'Nicholas.Stanton',
+      email: 'Rey.Padberg@rosamond.biz'
     }
   ];
 }
