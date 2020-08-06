@@ -13,7 +13,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'User Management',
-    icon: 'home-outline',
+    icon: 'people-outline',
     link: '/pages/dashboard',
     home: true,
   },
@@ -41,7 +41,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'AIS',
-    icon: 'lock-outline',
+    icon: 'shake-outline',
     children: [
       {
         title: 'MMSI Management',
@@ -63,7 +63,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'Support Programs',
-    icon: 'lock-outline',
+    icon: 'color-picker-outline',
     children: [
       {
         title: 'E100',
@@ -77,7 +77,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'Firmware',
-    icon: 'home-outline',
+    icon: 'smartphone-outline',
     link: '/pages/firmware',
   },
 ];
