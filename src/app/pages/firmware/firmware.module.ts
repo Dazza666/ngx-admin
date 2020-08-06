@@ -3,7 +3,7 @@ import { NbCardModule, NbTabsetModule } from '@nebular/theme';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 import { ThemeModule } from '../../@theme/theme.module';
-import { FirmwareComponent, BasicExampleDataComponent } from './firmware.component';
+import { FirmwareComponent } from './firmware.component';
 
 @NgModule({
   imports: [
