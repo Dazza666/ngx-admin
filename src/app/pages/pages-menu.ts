@@ -8,8 +8,14 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
-    title: 'FEATURES',
+    title: 'Menu',
     group: true,
+  },
+  {
+    title: 'User Management',
+    icon: 'home-outline',
+    link: '/pages/dashboard',
+    home: true,
   },
   {
     title: 'Auth',
@@ -32,5 +38,46 @@ export const MENU_ITEMS: NbMenuItem[] = [
         link: '/auth/reset-password',
       },
     ],
+  },
+  {
+    title: 'AIS',
+    icon: 'lock-outline',
+    children: [
+      {
+        title: 'MMSI Management',
+        link: '/auth/login',
+      },
+      {
+        title: 'Configs',
+        link: '/auth/register',
+      },
+      {
+        title: 'Request Password',
+        link: '/auth/request-password',
+      },
+      {
+        title: 'Reset Password',
+        link: '/auth/reset-password',
+      },
+    ],
+  },
+  {
+    title: 'Support Programs',
+    icon: 'lock-outline',
+    children: [
+      {
+        title: 'E100',
+        link: '/auth/login',
+      },
+      {
+        title: 'V100',
+        link: '/auth/register',
+      },
+    ],
+  },
+  {
+    title: 'Firmware',
+    icon: 'home-outline',
+    link: '/pages/firmware',
   },
 ];
