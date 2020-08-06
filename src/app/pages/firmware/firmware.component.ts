@@ -71,14 +71,14 @@ export class FirmwareComponent {
       id: 1,
       name: 'Leanne Graham',
       username: 'Bret',
-      email: 'Sincere@april.biz'
+      email: 'Sincere@april.biz',
     },
     // ... other rows here
     {
       id: 11,
       name: 'Nicholas DuBuque',
       username: 'Nicholas.Stanton',
-      email: 'Rey.Padberg@rosamond.biz'
-    }
+      email: 'Rey.Padberg@rosamond.biz',
+    },
   ];
 }
