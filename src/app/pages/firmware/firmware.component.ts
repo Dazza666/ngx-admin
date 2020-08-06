@@ -52,18 +52,18 @@ export class FirmwareComponent {
   settings = {
     columns: {
       id: {
-        title: 'ID'
+        title: 'ID',
       },
       name: {
-        title: 'Full Name'
+        title: 'Full Name',
       },
       username: {
-        title: 'User Name'
+        title: 'User Name',
       },
       email: {
-        title: 'Email'
-      }
-    }
+        title: 'Email',
+      },
+    },
   };
 
   data = [
