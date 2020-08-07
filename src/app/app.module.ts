@@ -11,54 +11,30 @@ import { CoreModule } from './@core/core.module';
 import { ThemeModule } from './@theme/theme.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import {
-  NbChatModule,
-  NbDatepickerModule,
-  NbDialogModule,
-  NbMenuModule,
-  NbSidebarModule,
-  NbToastrModule,
-  NbWindowModule,
-} from '@nebular/theme';
-import { NbPasswordAuthStrategy, NbAuthModule } from '@nebular/auth';
+import { NbChatModule, NbDatepickerModule, NbDialogModule, NbMenuModule, NbSidebarModule, NbToastrModule, NbWindowModule, } from '@nebular/theme';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth'; 
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { NbAuthModule } from '@nebular/auth';
+import { NbFirebasePasswordStrategy } from '@nebular/firebase-auth';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+    AngularFireAuthModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
-
     ThemeModule.forRoot(),
-
     NbSidebarModule.forRoot(),
     NbAuthModule.forRoot({
       strategies: [
-        NbPasswordAuthStrategy.setup({
-          name: 'email',
-
-          baseEndpoint: 'http://example.com/app-api/v1',
-          login: {
-            endpoint: '/auth/sign-in',
-            method: 'post',
-          },
-          register: {
-            endpoint: '/auth/sign-up',
-            method: 'post',
-          },
-          logout: {
-            endpoint: '/auth/sign-out',
-            method: 'post',
-          },
-          requestPass: {
-            endpoint: '/auth/request-pass',
-            method: 'post',
-          },
-          resetPass: {
-            endpoint: '/auth/reset-pass',
-            method: 'post',
-          },
+        NbFirebasePasswordStrategy.setup({
+          name: 'password',
         }),
       ],
       forms: {},
@@ -75,7 +51,7 @@ import { NbPasswordAuthStrategy, NbAuthModule } from '@nebular/auth';
     CoreModule.forRoot(),
   ],
   bootstrap: [AppComponent],
-  
+
 })
 export class AppModule {
 }

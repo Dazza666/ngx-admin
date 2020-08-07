@@ -10,4 +10,11 @@
 
 export const environment = {
   production: false,
+  firebase: {
+    projectId: 'oceansignalsdk',
+    apiKey: 'AIzaSyCHFBpkwOhb96NIDQnLzKrmt50z1yms1PY',
+    authDomain: 'oceansignalsdk.firebaseapp.com',
+    databaseURL: 'https://oceansignalsdk.firebaseio.com',
+    storageBucket: 'gs://oceansignalsdk.appspot.com/',
+  }
 };
