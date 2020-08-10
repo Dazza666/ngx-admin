@@ -13,9 +13,6 @@ import { AngularFirestore } from '@angular/fire/firestore';
 })
 export class AppComponent implements OnInit {
 
-  // constructor(private analytics: AnalyticsService) {
-  // }
-
   constructor(firestore: AngularFirestore, private analytics: AnalyticsService) {
 
   }

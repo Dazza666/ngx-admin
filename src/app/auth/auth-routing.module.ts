@@ -12,6 +12,7 @@ export const routes: Routes = [
         path: 'login',
         component: NgxLoginComponent,
       },
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
     ],
   },
 ];
