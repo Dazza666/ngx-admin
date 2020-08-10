@@ -1,6 +1,7 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NbAuthModule, NbDummyAuthStrategy } from '@nebular/auth';
+import { NbAuthModule } from '@nebular/auth';
+import { NbFirebasePasswordStrategy } from '@nebular/firebase-auth';
 import { NbSecurityModule, NbRoleProvider } from '@nebular/security';
 import { of as observableOf } from 'rxjs';
 
@@ -12,24 +13,6 @@ import {
 import { UserData } from './data/users';
 import { UserService } from './mock/users.service';
 import { MockDataModule } from './mock/mock-data.module';
-
-const socialLinks = [
-  {
-    url: 'https://github.com/akveo/nebular',
-    target: '_blank',
-    icon: 'github',
-  },
-  {
-    url: 'https://www.facebook.com/akveo/',
-    target: '_blank',
-    icon: 'facebook',
-  },
-  {
-    url: 'https://twitter.com/akveo_inc',
-    target: '_blank',
-    icon: 'twitter',
-  },
-];
 
 const DATA_SERVICES = [
   { provide: UserData, useClass: UserService },
@@ -46,21 +29,41 @@ export const NB_CORE_PROVIDERS = [
   ...MockDataModule.forRoot().providers,
   ...DATA_SERVICES,
   ...NbAuthModule.forRoot({
-
-    strategies: [
-      NbDummyAuthStrategy.setup({
-        name: 'email',
-        delay: 3000,
-      }),
-    ],
     forms: {
       login: {
-        socialLinks: socialLinks,
+        strategy: 'password',
+        rememberMe: false,
+        socialLinks: [],
       },
-      register: {
-        socialLinks: socialLinks,
+      logout: {
+        strategy: 'password',
+      },
+      validation: {
+        password: {
+          required: true,
+          minLength: 6,
+          maxLength: 50,
+        },
+        email: {
+          required: true,
+        },
+        fullName: {
+          required: false,
+          minLength: 4,
+          maxLength: 50,
+        },
       },
     },
+    strategies: [
+      NbFirebasePasswordStrategy.setup({
+        name: 'password',
+        login: {
+          redirect: {
+            success: 'example/firebase/password-showcase',
+          },
+        },
+      }),
+    ],
   }).providers,
 
   NbSecurityModule.forRoot({

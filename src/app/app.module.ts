@@ -15,8 +15,7 @@ import { NbChatModule, NbDatepickerModule, NbDialogModule, NbMenuModule, NbSideb
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth'; 
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { NbAuthModule } from '@nebular/auth';
-import { NbFirebasePasswordStrategy } from '@nebular/firebase-auth';
+import { NbFirebaseAuthModule, NbFirebasePasswordStrategy } from '@nebular/firebase-auth';
 import { environment } from '../environments/environment';
 import { AuthGuard } from './auth-guard.service';
 
@@ -32,15 +31,7 @@ import { AuthGuard } from './auth-guard.service';
     AppRoutingModule,
     ThemeModule.forRoot(),
     NbSidebarModule.forRoot(),
-    NbAuthModule.forRoot({
-      strategies: [
-        NbFirebasePasswordStrategy.setup({
-          name: 'password',
-        }),
-      ],
-      forms: {},
-    }),
-
+    NbFirebaseAuthModule,
     NbMenuModule.forRoot(),
     NbDatepickerModule.forRoot(),
     NbDialogModule.forRoot(),
