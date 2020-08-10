@@ -18,6 +18,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { NbAuthModule } from '@nebular/auth';
 import { NbFirebasePasswordStrategy } from '@nebular/firebase-auth';
 import { environment } from '../environments/environment';
+import { AuthGuard } from './auth-guard.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -51,6 +52,10 @@ import { environment } from '../environments/environment';
     CoreModule.forRoot(),
   ],
   bootstrap: [AppComponent],
+  providers: [
+    // ...
+    AuthGuard
+  ]
 
 })
 export class AppModule {
