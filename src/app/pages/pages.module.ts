@@ -6,6 +6,7 @@ import { PagesComponent } from './pages.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { FirmwareModule } from './firmware/firmware.module';
+import { UserManagementModule } from './userManagement/userManagement.module';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { FirmwareModule } from './firmware/firmware.module';
     NbMenuModule,
     DashboardModule,
     FirmwareModule,
+    UserManagementModule,
   ],
   declarations: [
     PagesComponent,

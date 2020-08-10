@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FirmwareComponent } from './firmware/firmware.component';
+import { UserManagementComponent } from './userManagement/userManagement.component';
 // import { BasicExampleDataComponent } from './firmware/firmware.component';
 
 const routes: Routes = [{
@@ -17,6 +18,10 @@ const routes: Routes = [{
     {
       path: 'firmware',
       component: FirmwareComponent,
+    },
+    {
+      path: 'user',
+      component: UserManagementComponent,
     },
     {
       path: '',

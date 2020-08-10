@@ -14,7 +14,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'User Management',
     icon: 'people-outline',
-    link: '/pages/dashboard',
+    link: '/pages/user',
     home: true,
   },
   {
@@ -50,14 +50,6 @@ export const MENU_ITEMS: NbMenuItem[] = [
       {
         title: 'Configs',
         link: '/auth/register',
-      },
-      {
-        title: 'Request Password',
-        link: '/auth/request-password',
-      },
-      {
-        title: 'Reset Password',
-        link: '/auth/reset-password',
       },
     ],
   },
