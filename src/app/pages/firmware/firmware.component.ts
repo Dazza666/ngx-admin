@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { catchError, share, take, map } from 'rxjs/operators';
-import { NbAuthService, NbAuthToken } from '@nebular/auth';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 
 @Component({
@@ -14,17 +13,9 @@ export class FirmwareComponent {
   itemsRefList: AngularFireList<any>;
   itemsList: Observable<any[]>;
 
-  userToken$: Observable<NbAuthToken>;
-  isAuthenticated$: Observable<boolean>;
-
   constructor(
-    private authService: NbAuthService,
-    private router: Router,
-    private route: ActivatedRoute,
     db: AngularFireDatabase,
   ) {
-    this.userToken$ = this.authService.onTokenChange();
-    this.isAuthenticated$ = this.authService.isAuthenticated();
 
     this.itemsRefList = db.list('/SOFTWARE/embedded/ais');
 
@@ -44,19 +35,6 @@ export class FirmwareComponent {
   }
   updateItem(key: string, newText: string) {
     this.itemsRefList.update(key, { latest: newText });
-  }
-
-  logout() {
-    this.authService.logout('password');
-    this.router.navigate(['../user'], { relativeTo: this.route });
-  }
-
-  login() {
-    this.router.navigate(['../login'], { relativeTo: this.route });
-  }
-
-  resetPassword() {
-    this.router.navigate(['../reset-password'], { relativeTo: this.route });
   }
 
   // When the user wants to delete a entry, we ask them, but regardless what they say we will reject the promise.
@@ -79,7 +57,7 @@ export class FirmwareComponent {
   // Store to be updated and the data will refresh. So its pointless, and indeed dangerous in case the firebase write fails but looks like it succeeded
   onEditConfirm(event): void {
     if (window.confirm('Are you sure what you want to make this edit?')) {
-      event.newData.ref.update({latest: event.newData.firmware});
+      event.newData.ref.update({ latest: event.newData.firmware });
       //intentional, see above
       event.confirm.reject();
     } else {
