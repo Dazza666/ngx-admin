@@ -48,7 +48,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
+  userMenu = [ { title: 'Log out' } ];
 
   public constructor(
     private sidebarService: NbSidebarService,
