@@ -9,6 +9,55 @@
 $nb-themes: nb-register-theme((
   layout-padding-top: 2.25rem,
 
+  color-primary-100: #FFF6D1,
+  color-primary-200: #FFEAA3,
+  color-primary-300: #FFDB75,
+  color-primary-400: #FFCD52,
+  color-primary-500: #FFB519,
+  color-primary-600: #DB9312,
+  color-primary-700: #B7750C,
+  color-primary-800: #935907,
+  color-primary-900: #7A4504,
+
+  color-basic-100: #E7F4F7,
+  color-basic-200: #D1E8F0,
+  color-basic-300: #A9C6D2,
+  color-basic-400: #7D97A5,
+  color-basic-500: #485C6A,
+  color-basic-600: #34495B,
+  color-basic-700: #24374C,
+  color-basic-800: #16263D,
+  color-basic-900: #0D1B32,
+
+  background-basic-color-1: color-basic-700,
+  background-basic-color-2: color-basic-800,
+  background-basic-color-3: color-basic-900,
+  background-basic-color-4: color-basic-100,
+
+  border-basic-color-1: color-basic-700,
+  border-basic-color-2: color-basic-800,
+  border-basic-color-3: color-basic-900,
+  border-basic-color-4: color-basic-1000,
+  border-basic-color-5: color-basic-1100,
+
+  // affects the icons on the menu bar
+  menu-item-icon-color: color-basic-200,
+  // affects the non clickable menu items headers
+  menu-group-text-color: color-basic-200,
+  // affects the icons on the header, footer etc
+  text-hint-color: color-basic-200,
+
+  // sidebar-text-color: color-basic-200,
+
+  shadow: 0 0.5rem 1rem 0 rgba(25, 30, 51, 0.24),
+
+  text-disabled-color: color-basic-300,
+
+), oceanSignal, dark); // <- theme name and a parent theme
+
+$nb-themes: nb-register-theme((
+  layout-padding-top: 2.25rem,
+
   menu-item-icon-margin: 0 0.5rem 0 0,
 
   card-height-tiny: 13.5rem,
