@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, share, take, map } from 'rxjs/operators';
 import { NbAuthService, NbAuthToken } from '@nebular/auth';
-import { AngularFireDatabase, AngularFireObject, AngularFireList } from '@angular/fire/database';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 
 @Component({
   selector: 'ngx-dashboard',
@@ -14,8 +14,6 @@ export class FirmwareComponent {
   itemsRefList: AngularFireList<any>;
   itemsList: Observable<any[]>;
 
-  itemRefObject: AngularFireObject<any>;
-  itemsObjects: Observable<any>;
   userToken$: Observable<NbAuthToken>;
   isAuthenticated$: Observable<boolean>;
 
@@ -27,15 +25,6 @@ export class FirmwareComponent {
   ) {
     this.userToken$ = this.authService.onTokenChange();
     this.isAuthenticated$ = this.authService.isAuthenticated();
-    //this.items = db.object('/SOFTWARE/embedded/').valueChanges();
-    this.itemRefObject = db.object('/SOFTWARE/embedded/');
-
-    this.itemRefObject.snapshotChanges().subscribe(action => {
-      console.log(action.type);
-      console.log(action.key)
-      console.log(action.payload.val())
-    });
-    this.itemsObjects = this.itemRefObject.valueChanges();
 
     this.itemsRefList = db.list('/SOFTWARE/embedded/ais');
 
@@ -113,8 +102,6 @@ export class FirmwareComponent {
     }
   }
 
-  
-
   settings = {
     add: {
       addButtonContent: '<i class="nb-plus"></i>',
@@ -143,17 +130,4 @@ export class FirmwareComponent {
     },
   };
 
-
-  //{ "ATB1": { "latest": "01.3.00" }, "CB2": { "latest": "01.3.00" }, "ata100": { "latest": "01.0.00" } }
-
-  data = [
-    {
-      product: 'Leanne Graham',
-      firmware: 'Bret',
-    },
-    {
-      product: 'Nicholas DuBuque',
-      firmware: 'Nicholas.Stanton',
-    },
-  ];
 }
