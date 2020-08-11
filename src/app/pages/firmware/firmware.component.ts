@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
@@ -9,16 +8,16 @@ import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
   templateUrl: './firmware.component.html',
 })
 export class FirmwareComponent {
-
   itemsRefList: AngularFireList<any>;
   itemsList: Observable<any[]>;
 
   constructor(
     db: AngularFireDatabase,
   ) {
-
+    //The reference to the location we want to get data from
     this.itemsRefList = db.list('/SOFTWARE/embedded/ais');
-
+    //Whats happening here, we are syncing the list data locally, then piping that input into a map, which iterates over the returned array of data, and we are
+    //changing some of the content, so the product field contains the key, in this case maybe its ATB1, and then the firmware field contains the value of the 'latest' child node, in this case maybe 1.0.0
     this.itemsList = this.itemsRefList.snapshotChanges().pipe(
       map(changes =>
         changes.map(c => ({
@@ -28,13 +27,6 @@ export class FirmwareComponent {
         }))
       )
     );
-  }
-
-  addItem(newName: string) {
-    this.itemsRefList.push({ latest: newName });
-  }
-  updateItem(key: string, newText: string) {
-    this.itemsRefList.update(key, { latest: newText });
   }
 
   // When the user wants to delete a entry, we ask them, but regardless what they say we will reject the promise.
