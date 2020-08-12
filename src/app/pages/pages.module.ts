@@ -7,6 +7,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { FirmwareModule } from './firmware/firmware.module';
 import { UserManagementModule } from './userManagement/userManagement.module';
+import { MmsiManagementModule } from './ais/mmsiManagement/mmsiManagement.module';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { UserManagementModule } from './userManagement/userManagement.module';
     DashboardModule,
     FirmwareModule,
     UserManagementModule,
+    MmsiManagementModule,
   ],
   declarations: [
     PagesComponent,

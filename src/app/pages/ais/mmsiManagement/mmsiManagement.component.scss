@@ -1,0 +1,16 @@
+@import '../../../@theme/styles/themes';
+
+.table {
+    color: nb-theme(text-basic-color) !important;
+  }
+
+  tr .ng2-smart-actions{ display: flex; }
+  ng2-st-tbody-custom {display: flex;}
+
+ ng2-st-tbody-edit-delete a.ng2-smart-action {display: inline-block !important;}
+ ng2-st-tbody-create-cancel a.ng2-smart-action {display: inline-block !important;}
+ng2-st-tbody-custom a.ng2-smart-action.ng2-smart-action-custom-custom {
+    display: inline-block;
+    width: 70px;
+    text-align: center;
+}

@@ -23,7 +23,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     children: [
       {
         title: 'MMSI Management',
-        link: '/auth/login',
+        link: '/pages/ais/mmsi',
       },
       {
         title: 'Configs',

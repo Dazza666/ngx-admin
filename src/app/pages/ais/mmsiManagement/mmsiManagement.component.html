@@ -1,0 +1,10 @@
+<nb-card >
+  <nb-card-header>
+MMSIs
+  </nb-card-header>
+  <nb-card-body>
+    <div *ngIf="itemsList | async as items">
+      <ng2-smart-table [settings]="settings" [source]="items" (custom)="onCustom($event)" ></ng2-smart-table>
+    </div>
+  </nb-card-body>
+</nb-card>
