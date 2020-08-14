@@ -18,6 +18,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { NbFirebaseAuthModule, NbFirebasePasswordStrategy } from '@nebular/firebase-auth';
 import { environment } from '../environments/environment';
 import { AuthGuard } from './auth-guard.service';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,6 +30,7 @@ import { AuthGuard } from './auth-guard.service';
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
+    NbEvaIconsModule,
     ThemeModule.forRoot(),
     NbSidebarModule.forRoot(),
     NbFirebaseAuthModule,
@@ -41,6 +43,7 @@ import { AuthGuard } from './auth-guard.service';
       messageGoogleMapKey: 'AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY',
     }),
     CoreModule.forRoot(),
+    
   ],
   bootstrap: [AppComponent],
   providers: [
