@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { catchError, share, take } from 'rxjs/operators';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 
 @Component({
@@ -23,17 +21,22 @@ export class MmsiManagementComponent {
     //Whats happening here, we are syncing the list data locally, then piping that input into a map, which iterates over the returned array of data, and we are
     //changing some of the content, so the product field contains the key, in this case maybe its ATB1, and then the firmware field contains the value of the 'latest' child node, in this case maybe 1.0.0
     this.itemsList = this.itemsRefList.snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c => ({
+      map(changes => {
+        let temp = changes.map(c => ({
           mmsi: c.payload.key,
           state: c.payload.val().state,
           vendor: c.payload.val().vendor,
           userid: c.payload.val().userid,
           ref: c.payload.ref,
-        })
-        )
-      )
-    );
+        }))
+        this.stopLoading();
+        return temp
+      })
+      );
+  }
+
+  stopLoading() {
+    this.tableDataLoading = false;
   }
 
   onCustom(event) {
@@ -45,16 +48,16 @@ export class MmsiManagementComponent {
       add:false,
       edit:false,
       delete:false,
-        custom: [
-          {
-            name: 'accept',
-            title: '<i class="nb-checkmark"></i>',
-          },
-          {
-            name: 'deny',
-            title: '<i class="nb-close"></i>',
-          },
-        ],
+      custom: [
+        {
+          name: 'accept',
+          title: '<i class="nb-checkmark inline-block width: 50px"></i>',
+        },
+        {
+          name: 'deny',
+          title: '<i class="nb-close inline-block width: 50px"></i>',
+        },
+      ],
     },
     columns: {
       mmsi: {
