@@ -27,7 +27,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
       {
         title: 'Configs',
-        link: '/auth/register',
+        link: '/pages/ais/aisConfigs',
       },
     ],
   },

@@ -6,6 +6,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { FirmwareComponent } from './firmware/firmware.component';
 import { UserManagementComponent } from './userManagement/userManagement.component';
 import { MmsiManagementComponent } from './ais/mmsiManagement/mmsiManagement.component';
+import { AisConfigsComponent } from './ais/aisConfigs/aisConfigs.component';
 // import { BasicExampleDataComponent } from './firmware/firmware.component';
 
 const routes: Routes = [{
@@ -27,6 +28,10 @@ const routes: Routes = [{
     {
       path: 'ais/mmsi',
       component: MmsiManagementComponent,
+    },
+    {
+      path: 'ais/aisConfigs',
+      component: AisConfigsComponent,
     },
     {
       path: '',

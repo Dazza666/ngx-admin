@@ -8,6 +8,7 @@ import { PagesRoutingModule } from './pages-routing.module';
 import { FirmwareModule } from './firmware/firmware.module';
 import { UserManagementModule } from './userManagement/userManagement.module';
 import { MmsiManagementModule } from './ais/mmsiManagement/mmsiManagement.module';
+import { AisConfigsModule } from './ais/aisConfigs/aisConfigs.module';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { MmsiManagementModule } from './ais/mmsiManagement/mmsiManagement.module
     FirmwareModule,
     UserManagementModule,
     MmsiManagementModule,
+    AisConfigsModule,
   ],
   declarations: [
     PagesComponent,
