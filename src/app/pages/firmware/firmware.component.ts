@@ -10,23 +10,31 @@ import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 export class FirmwareComponent {
   itemsRefList: AngularFireList<any>;
   itemsList: Observable<any[]>;
+  tableDataLoading = true;
 
   constructor(
     db: AngularFireDatabase,
   ) {
     //The reference to the location we want to get data from
     this.itemsRefList = db.list('/SOFTWARE/embedded/ais');
-    //Whats happening here, we are syncing the list data locally, then piping that input into a map, which iterates over the returned array of data, and we are
+    //Whats happening here? we are syncing the list data locally, then piping that input into a map, which iterates over the returned array of data, and we are
     //changing some of the content, so the product field contains the key, in this case maybe its ATB1, and then the firmware field contains the value of the 'latest' child node, in this case maybe 1.0.0
     this.itemsList = this.itemsRefList.snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c => ({
+      map(changes =>{
+       let temp = changes.map(c => ({
           product: c.payload.key,
           firmware: c.payload.child('latest').val(),
           ref: c.payload.ref,
         }))
-      )
+        this.stopLoading();
+       //map is done here, should be able to call other code
+       return temp;
+      })
     );
+  }
+
+  stopLoading() {
+    this.tableDataLoading = false;
   }
 
   // When the user wants to delete a entry, we ask them, but regardless what they say we will reject the promise.
@@ -36,6 +44,7 @@ export class FirmwareComponent {
   onDeleteConfirm(event): void {
     if (window.confirm('WARNING! If you delete this entry, it may impact other services (e.g. AIS Mobile apps) that use this data. Are you certain?')) {
       event.data.ref.remove();
+      this.tableDataLoading = true;
       //intentional, see above
       event.confirm.reject();
     } else {
@@ -50,6 +59,7 @@ export class FirmwareComponent {
   onEditConfirm(event): void {
     if (window.confirm('Are you sure what you want to make this edit?')) {
       event.newData.ref.update({ latest: event.newData.firmware });
+      this.tableDataLoading = true;
       //intentional, see above
       event.confirm.reject();
     } else {
@@ -64,7 +74,7 @@ export class FirmwareComponent {
   onCreateConfirm(event): void {
     if (window.confirm('Are you sure what you want to add this product?')) {
       this.itemsRefList.update(event.newData.product, { latest: event.newData.firmware });
-      //event.newData.ref.update({latest: event.newData.firmware});
+      this.tableDataLoading = true;
       //intentional, see above
       event.confirm.reject();
     } else {

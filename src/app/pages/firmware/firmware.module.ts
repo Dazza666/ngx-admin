@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
-import { NbCardModule, NbTabsetModule } from '@nebular/theme';
+import { NbCardModule, NbTabsetModule, NbSpinnerModule } from '@nebular/theme';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
-
 import { ThemeModule } from '../../@theme/theme.module';
 import { FirmwareComponent } from './firmware.component';
 
@@ -11,6 +10,7 @@ import { FirmwareComponent } from './firmware.component';
     NbTabsetModule,
     NbCardModule,
     ThemeModule,
+    NbSpinnerModule,
   ],
   declarations: [
     FirmwareComponent,
