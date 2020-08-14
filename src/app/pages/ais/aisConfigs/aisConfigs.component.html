@@ -12,6 +12,41 @@
   </nb-card-body>
 </nb-card>
 
+<h1>Darrens config widgets!</h1>
+<div *ngIf="userConfigsArray; let userConfigsArray1; else loadingDarren">
+  <ul>
+    <li *ngFor="let item of userConfigsArray1">
+      
+      <nb-accordion>
+        <nb-accordion-item>
+          <nb-accordion-item-header>
+            {{ item.mManufacturerID }}
+          </nb-accordion-item-header>
+          <nb-accordion-item-body>
+            <nb-tabset>
+              <nb-tab tabTitle="Simple Tab #1">
+                Tab content 1
+              </nb-tab>
+              <nb-tab tabTitle="Simple Tab #2">
+                Tab content 2
+              </nb-tab>
+             </nb-tabset>
+             
+            A nebula is an interstellar cloud of dust, hydrogen, helium and other ionized gases.
+            Originally, nebula was a name for any diffuse astronomical object,
+            including galaxies beyond the Milky Way.
+          </nb-accordion-item-body>
+        </nb-accordion-item>
+      </nb-accordion>
+
+
+      {{ item.mManufacturerID }}
+      <!-- <code>{{ item.payload.val().EMAIL }}</code> -->
+    </li>
+  </ul>
+</div>
+<ng-template #loadingDarren>Loading Dazza&hellip;</ng-template>
+
 <h1>Firebase widgets!</h1>
 <div *ngIf="userIds$ | async; let userIds; else loading">
   <ul>
