@@ -32,7 +32,7 @@ export const NB_CORE_PROVIDERS = [
     forms: {
       login: {
         strategy: 'password',
-        rememberMe: false,
+        rememberMe: true,
         socialLinks: [],
       },
       logout: {
@@ -62,6 +62,7 @@ export const NB_CORE_PROVIDERS = [
             success: 'example/firebase/password-showcase',
           },
         },
+        refreshToken: true,
       }),
     ],
   }).providers,
