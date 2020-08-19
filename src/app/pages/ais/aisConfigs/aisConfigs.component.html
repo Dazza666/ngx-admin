@@ -13,11 +13,63 @@
 </nb-card>
 
 <h1>Darrens config widgets!</h1>
-<div *ngIf="userConfigsArray; let userConfigsArray1; else loadingDarren">
-  <ul>
-    <li *ngFor="let item of userConfigsArray1">
-      
-      <nb-accordion>
+<div *ngIf="userConfigs$ | async; let userConfigs; else loadingDarren">
+<ng-container *ngFor="let item of userConfigs; last as isLast">
+  <nb-accordion>
+    <nb-accordion-item>
+      <nb-accordion-item-header *ngIf="item | async">
+        <ul>
+          <li *ngFor="let hello of item | async">
+            {{ hello.payload.val().mProductName }}
+          </li>
+        </ul>
+      </nb-accordion-item-header>
+      <nb-accordion-item-body>
+        <nb-tabset>
+          <nb-tab tabTitle="Simple Tab #1">
+            Tab content 1
+          </nb-tab>
+          <nb-tab tabTitle="Simple Tab #2">
+            Tab content 2
+          </nb-tab>
+         </nb-tabset>
+        A nebula is an interstellar cloud of dust, hydrogen, helium and other ionized gases.
+        Originally, nebula was a name for any diffuse astronomical object,
+        including galaxies beyond the Milky Way.
+      </nb-accordion-item-body>
+    </nb-accordion-item>
+  </nb-accordion>  
+  <span *ngIf="!isLast">&nbsp;</span>
+</ng-container>
+</div>
+<ng-template #loadingDarren>Loading Dazza&hellip;</ng-template>
+<!-- <ng-container *ngIf="userConfigsArray; let userConfigsArray1; else loadingDarren">
+  <nb-accordion *ngFor="let item of userConfigsArray1; last as isLast">
+    <nb-accordion-item>
+      <nb-accordion-item-header>
+        {{ item.mManufacturerID }}
+      </nb-accordion-item-header>
+      <nb-accordion-item-body>
+        <nb-tabset>
+          <nb-tab tabTitle="Simple Tab #1">
+            Tab content 1
+          </nb-tab>
+          <nb-tab tabTitle="Simple Tab #2">
+            Tab content 2
+          </nb-tab>
+         </nb-tabset>
+        A nebula is an interstellar cloud of dust, hydrogen, helium and other ionized gases.
+        Originally, nebula was a name for any diffuse astronomical object,
+        including galaxies beyond the Milky Way.
+      </nb-accordion-item-body>
+    </nb-accordion-item>
+  </nb-accordion>      
+  <span *ngIf="!isLast">&nbsp;</span>
+</ng-container> -->
+
+
+<!-- <div *ngIf="userConfigsArray; let userConfigsArray1; else loadingDarren">
+      <nb-accordion *ngFor="let item of userConfigsArray1">
         <nb-accordion-item>
           <nb-accordion-item-header>
             {{ item.mManufacturerID }}
@@ -31,28 +83,21 @@
                 Tab content 2
               </nb-tab>
              </nb-tabset>
-             
             A nebula is an interstellar cloud of dust, hydrogen, helium and other ionized gases.
             Originally, nebula was a name for any diffuse astronomical object,
             including galaxies beyond the Milky Way.
           </nb-accordion-item-body>
         </nb-accordion-item>
-      </nb-accordion>
+      </nb-accordion>      
+</div> -->
 
-
-      {{ item.mManufacturerID }}
-      <!-- <code>{{ item.payload.val().EMAIL }}</code> -->
-    </li>
-  </ul>
-</div>
-<ng-template #loadingDarren>Loading Dazza&hellip;</ng-template>
 
 <h1>Firebase widgets!</h1>
 <div *ngIf="userIds$ | async; let userIds; else loading">
   <ul>
     <li *ngFor="let item of userIds">
       {{ item.payload.val().text }}
-      <code>{{ item.payload.val().EMAIL }}</code>
+      <!-- <code>{{ item.payload.val().EMAIL }}</code> -->
     </li>
   </ul>
   <div *ngIf="userIds.length === 0">No results, try clearing filters</div>
