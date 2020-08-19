@@ -17,7 +17,7 @@ export class AisConfigsComponent {
   itemsList: Observable<any[]>;
   tableDataLoading = true;
   userIds$: Observable<any[]>;
-  userConfigs$: Observable<any[]>;
+  userConfigs$: Observable<Observable<AisConfigurationItem[]>[]>
   userSuperDuper$: Observable<any>;
   users$: BehaviorSubject<string | null>;
   // userConfigs$: Observable<any[]>;
@@ -44,21 +44,18 @@ export class AisConfigsComponent {
     );
 
     this.userConfigs$ = this.userIds$.pipe(
-      map(userids => {
-        let temp = userids.map(userid =>
-          db.list('/AIS/USERSAVEDCONFIGS/' + userid.key).snapshotChanges().pipe(
-            map(changes => {
+      map(userids =>
+        userids.map(userid => {
+          return db.list('/AIS/USERSAVEDCONFIGS/' + userid.key).snapshotChanges().pipe(
+            map(changes =>
               changes.map(c => {
-                console.log(c.payload.val());
-                return c.payload.val();
+                console.log(c.payload.toJSON);
+                return AisConfigurationItem.fromJson(<AisConfigurationItem>c.payload.toJSON());
               })
-              return changes;
-            })
+            )
           )
-        )
-        console.log(temp);
-        return temp;
-      })
+        })
+      )
     )
 
     // this.userConfigs$ = this.userIds$.pipe(

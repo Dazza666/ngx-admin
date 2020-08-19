@@ -20,7 +20,7 @@
       <nb-accordion-item-header *ngIf="item | async">
         <ul>
           <li *ngFor="let hello of item | async">
-            {{ hello.payload.val().mProductName }}
+            {{ hello.mProductName }}
           </li>
         </ul>
       </nb-accordion-item-header>
