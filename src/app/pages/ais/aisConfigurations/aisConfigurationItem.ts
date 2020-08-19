@@ -8,20 +8,26 @@ export class AisConfigurationItem {
     public mModelNumber: string,
     public mProductName: string,
     public mSerialNumber: string,
-    public mEncodedConfig: string,
+    public encodedConfig: string,
     public mMetaData: MetaData,
     public mAISDeviceDataStructure: AisConfigurationStructure,
   ) {
 
   }
 
+  static fromFirebaseList(dataSnapshots): AisConfigurationItem[] {
+    //debugger;
+    return dataSnapshots.map(json => AisConfigurationItem.fromJson(json.payload.toJSON()))
+  }
+
   static fromJsonList(array): AisConfigurationItem[] {
+    //debugger;
     return array.map(json => AisConfigurationItem.fromJson(json))
   }
 
   static fromJson({ mManufacturerID, mModelNumber, mProductName, mSerialNumber, encodedConfig, mMetaData, mAISDeviceDataStructure }): AisConfigurationItem {
 
-    debugger;
+    //debugger;
     return new AisConfigurationItem(
       mManufacturerID,
       mModelNumber,

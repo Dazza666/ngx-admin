@@ -47,11 +47,9 @@ export class AisConfigsComponent {
       map(userids =>
         userids.map(userid => {
           return db.list('/AIS/USERSAVEDCONFIGS/' + userid.key).snapshotChanges().pipe(
-            map(changes =>
-              changes.map(c => {
-                console.log(c.payload.toJSON);
-                return AisConfigurationItem.fromJson(<AisConfigurationItem>c.payload.toJSON());
-              })
+            map(changes => {
+              return AisConfigurationItem.fromFirebaseList(changes);
+            }
             )
           )
         })
