@@ -45,10 +45,10 @@ export class AisConfigsComponent {
 
     this.userConfigs$ = this.userIds$.pipe(
       map(userids =>
-        userids.map(userid => 
-           db.list('/AIS/USERSAVEDCONFIGS/' + userid.key).snapshotChanges().pipe(
-            map(changes => 
-               AisConfigurationItem.fromFirebaseList(changes)
+        userids.map(userid =>
+          db.list('/AIS/USERSAVEDCONFIGS/' + userid.key).snapshotChanges().pipe(
+            map(changes =>
+              AisConfigurationItem.fromFirebaseList(changes)
             )
           )
         )
