@@ -1,160 +1,166 @@
+<h1>Ais Configurations</h1>
+
 <nb-card>
   <nb-card-header>
-    Search config by email (min 4 chars) or MMSI (min 4 numbers):
+    Search users AIS configurations by email (min 4 chars) or MMSI (min 4 numbers):
   </nb-card-header>
   <nb-card-body>
-
     <nb-form-field>
       <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
-      <input type="text" (keyup)="onKeyUpEvent($event)" nbInput placeholder="Email">
+      <input type="text" (keyup)="onKeyUpEvent($event)" nbInput placeholder="Email or MMSI">
     </nb-form-field>
-
+    <nb-form-field>
+      <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+      <input type="text" (keyup)="onKeyUpEvent($event)" nbInput placeholder="MMSI">
+    </nb-form-field>
   </nb-card-body>
 </nb-card>
 
-<h1>Ais Configurations</h1>
-<div *ngIf="userIds$ | async; let userIds; else loading;">
+<div *ngIf="userIds$ | async; let userIds;">
+  <h1>Top {{ resultsLimit }} Results</h1>
   <div *ngFor="let userid of userIds; let userIndex = index;">
-    <div *ngIf="userConfigs$ | async; let filteredAllUserConfigs; else loadingDarren;">
+    <div *ngIf="userConfigs$ | async; let filteredAllUserConfigs;">
       <ng-container *ngFor="let thisUsersConfigs of filteredAllUserConfigs; let userConfigIndex = index;">
         <div *ngIf="userIndex == userConfigIndex">
-          <h1>{{ userid.payload.val().EMAIL }} ({{ userid.key }})</h1>
+          <h1>{{ userid.payload.val().EMAIL || "(No email)"}} ({{ userid.key }})</h1>
+          <!-- <h1>whoop : {{thisUsersConfigs | async | json}}</h1>  -->
+          <div *ngIf="(thisUsersConfigs | async).length === 0">No configurations found</div>
           <div *ngFor="let config of thisUsersConfigs | async; last as isLast;">
-          <nb-accordion >
-            <nb-accordion-item>
-              <nb-accordion-item-header>
-                <ul>
-                  <li>
-                    Product Name: {{ config.mProductName || "-" }}
-                  </li>
-                  <li>
-                    Product Serial: {{ config.mSerialNumber || "-" }}
-                  </li>
-                  <li>
-                    Product Vendor: {{ config.mMetaData.mVendor || "-" }} 
-                  </li>
-                  <li>
-                    MMSI: {{ config.mAISDeviceDataStructure.mMMSI || "-" }}
-                  </li>
-                </ul>
-              </nb-accordion-item-header>
-              <nb-accordion-item-body>
-                <nb-tabset>
-                  <nb-tab tabTitle="General">
-                    <ul>
-                      <li>
-                        Product Name: {{ config.mProductName || "-" }}
-                      </li>
-                      <li>
-                        Product Serial: {{ config.mSerialNumber || "-" }}
-                      </li>
-                      <li>
-                        Product Vendor: {{ config.mMetaData.mVendor || "-" }}
-                      </li>
-                      <li>
-                        Product Model: {{ config.mModelNumber || "-" }}
-                      </li>
-                      <li>
-                        Encoded Config: {{ config.encodedConfig || "-" }}
-                      </li>
-                    </ul>
-                  </nb-tab>
-                  <nb-tab tabTitle="Configuration">
-                    <ul>
-                      <li>
-                        MMSI: {{ config.mAISDeviceDataStructure.mMMSI || "-" }}
-                      </li>
-                      <li>
-                        Vessel Name: {{ config.mAISDeviceDataStructure.mVesselName || "-" }}
-                      </li>
-                      <li>
-                        Callsign: {{ config.mAISDeviceDataStructure.mCallsign || "-" }}
-                      </li>
-                      <li>
-                        Long Range Mode: {{ config.mAISDeviceDataStructure.mLongRangeModeEnabled || "-" }}
-                      </li>
-                      <li>
-                        External Silent Mode: {{ config.mAISDeviceDataStructure.mExternalSilentModeEnabled || "-" }}
-                      </li>
-                      <li>
-                        Port 1 baud: {{ config.mAISDeviceDataStructure.mPort1BaudRateSetting || "-" }}
-                      </li>
-                      <li>
-                        Port 1 sentence Output: {{ config.mAISDeviceDataStructure.mPort1SentenceSetting || "-" }}
-                      </li>
-                      <li>
-                        Port 2 baud: {{ config.mAISDeviceDataStructure.mPort2BaudRateSetting || "-" }}
-                      </li>
-                      <li>
-                        Port 2 sentence Output: {{ config.mAISDeviceDataStructure.mPort2SentenceSetting || "-" }}
-                      </li>
-                      <li>
-                        Silent Mode: {{ config.mAISDeviceDataStructure.mSilentModeEnabled || "-" }}
-                      </li>
-                      <li>
-                        Vessel Type: {{ config.mAISDeviceDataStructure.mVesselType || "-" }}
-                      </li>
-                      <li>
-                        WiFi PassPhrase: {{ config.mAISDeviceDataStructure.mWiFiPassPhrase || "-" }}
-                      </li>
-                      <li>
-                        WiFi SSID: {{ config.mAISDeviceDataStructure.mWiFiSSID || "-" }}
-                      </li>
-                      <li>
-                        N2k to NMEA0183: {{ config.mAISDeviceDataStructure.mN2kToNmea0183Flags || "-" }}
-                      </li>
-                      <li>
-                        NMEA0183 to WiFi: {{ config.mAISDeviceDataStructure.mNmea0183ToWiFiFlags || "-" }}
-                      </li>
-                      <li>
-                        PGN Routing: {{ config.mAISDeviceDataStructure.mPgnRoutingFlags || "-" }}
-                      </li>
-                    </ul>
-                  </nb-tab>
-                  <nb-tab tabTitle="Vessel Dimensions">
-                    <ul>
-                      <li>
-                        Int A: {{ config.mAISDeviceDataStructure.mDimensionIntA || "-" }}
-                      </li>
-                      <li>
-                        Int B: {{ config.mAISDeviceDataStructure.mDimensionIntB || "-" }}
-                      </li>
-                      <li>
-                        Int C: {{ config.mAISDeviceDataStructure.mDimensionIntC || "-" }}
-                      </li>
-                      <li>
-                        Int D: {{ config.mAISDeviceDataStructure.mDimensionIntD || "-" }}
-                      </li>
-                      <li>
-                        Ext A: {{ config.mAISDeviceDataStructure.mDimensionExtA || "-" }}
-                      </li>
-                      <li>
-                        Ext B: {{ config.mAISDeviceDataStructure.mDimensionExtB || "-" }}
-                      </li>
-                      <li>
-                        Ext C: {{ config.mAISDeviceDataStructure.mDimensionExtC || "-" }}
-                      </li>
-                      <li>
-                        Ext D: {{ config.mAISDeviceDataStructure.mDimensionExtD || "-" }}
-                      </li>
-                    </ul>
-                  </nb-tab>
-                  <nb-tab tabTitle="Meta Data">
-                    <ul>
-                      <li>
-                        Product Vendor: {{ config.mMetaData.mVendor }}
-                      </li>
-                      <li>
-                        Generated WiFi Password: {{ config.mMetaData.mGeneratedWifiPassword }}
-                      </li>
-                    </ul>
-                  </nb-tab>
-                </nb-tabset>
-              </nb-accordion-item-body>
-            </nb-accordion-item>
-          </nb-accordion>
-          <span *ngIf="!isLast">&nbsp;</span>
-        </div>
+            <nb-accordion>
+              <nb-accordion-item>
+                <nb-accordion-item-header>
+                  <ul>
+                    <li>
+                      Product Name: {{ config.mProductName || "-" }}
+                    </li>
+                    <li>
+                      Product Serial: {{ config.mSerialNumber || "-" }}
+                    </li>
+                    <li>
+                      Product Vendor: {{ config.mMetaData.mVendor || "-" }}
+                    </li>
+                    <li>
+                      MMSI: {{ config.mAISDeviceDataStructure.mMMSI || "-" }}
+                    </li>
+                  </ul>
+                </nb-accordion-item-header>
+                <nb-accordion-item-body>
+                  <nb-tabset>
+                    <nb-tab tabTitle="General">
+                      <ul>
+                        <li>
+                          Product Name: {{ config.mProductName || "-" }}
+                        </li>
+                        <li>
+                          Product Serial: {{ config.mSerialNumber || "-" }}
+                        </li>
+                        <li>
+                          Product Vendor: {{ config.mMetaData.mVendor || "-" }}
+                        </li>
+                        <li>
+                          Product Model: {{ config.mModelNumber || "-" }}
+                        </li>
+                        <li>
+                          Encoded Config: {{ config.encodedConfig || "-" }}
+                        </li>
+                      </ul>
+                    </nb-tab>
+                    <nb-tab tabTitle="Configuration">
+                      <ul>
+                        <li>
+                          MMSI: {{ config.mAISDeviceDataStructure.mMMSI || "-" }}
+                        </li>
+                        <li>
+                          Vessel Name: {{ config.mAISDeviceDataStructure.mVesselName || "-" }}
+                        </li>
+                        <li>
+                          Callsign: {{ config.mAISDeviceDataStructure.mCallsign || "-" }}
+                        </li>
+                        <li>
+                          Long Range Mode: {{ config.mAISDeviceDataStructure.mLongRangeModeEnabled || "-" }}
+                        </li>
+                        <li>
+                          External Silent Mode: {{ config.mAISDeviceDataStructure.mExternalSilentModeEnabled || "-" }}
+                        </li>
+                        <li>
+                          Port 1 baud: {{ config.mAISDeviceDataStructure.mPort1BaudRateSetting || "-" }}
+                        </li>
+                        <li>
+                          Port 1 sentence Output: {{ config.mAISDeviceDataStructure.mPort1SentenceSetting || "-" }}
+                        </li>
+                        <li>
+                          Port 2 baud: {{ config.mAISDeviceDataStructure.mPort2BaudRateSetting || "-" }}
+                        </li>
+                        <li>
+                          Port 2 sentence Output: {{ config.mAISDeviceDataStructure.mPort2SentenceSetting || "-" }}
+                        </li>
+                        <li>
+                          Silent Mode: {{ config.mAISDeviceDataStructure.mSilentModeEnabled || "-" }}
+                        </li>
+                        <li>
+                          Vessel Type: {{ config.mAISDeviceDataStructure.mVesselType || "-" }}
+                        </li>
+                        <li>
+                          WiFi PassPhrase: {{ config.mAISDeviceDataStructure.mWiFiPassPhrase || "-" }}
+                        </li>
+                        <li>
+                          WiFi SSID: {{ config.mAISDeviceDataStructure.mWiFiSSID || "-" }}
+                        </li>
+                        <li>
+                          N2k to NMEA0183: {{ config.mAISDeviceDataStructure.mN2kToNmea0183Flags || "-" }}
+                        </li>
+                        <li>
+                          NMEA0183 to WiFi: {{ config.mAISDeviceDataStructure.mNmea0183ToWiFiFlags || "-" }}
+                        </li>
+                        <li>
+                          PGN Routing: {{ config.mAISDeviceDataStructure.mPgnRoutingFlags || "-" }}
+                        </li>
+                      </ul>
+                    </nb-tab>
+                    <nb-tab tabTitle="Vessel Dimensions">
+                      <ul>
+                        <li>
+                          Int A: {{ config.mAISDeviceDataStructure.mDimensionIntA || "-" }}
+                        </li>
+                        <li>
+                          Int B: {{ config.mAISDeviceDataStructure.mDimensionIntB || "-" }}
+                        </li>
+                        <li>
+                          Int C: {{ config.mAISDeviceDataStructure.mDimensionIntC || "-" }}
+                        </li>
+                        <li>
+                          Int D: {{ config.mAISDeviceDataStructure.mDimensionIntD || "-" }}
+                        </li>
+                        <li>
+                          Ext A: {{ config.mAISDeviceDataStructure.mDimensionExtA || "-" }}
+                        </li>
+                        <li>
+                          Ext B: {{ config.mAISDeviceDataStructure.mDimensionExtB || "-" }}
+                        </li>
+                        <li>
+                          Ext C: {{ config.mAISDeviceDataStructure.mDimensionExtC || "-" }}
+                        </li>
+                        <li>
+                          Ext D: {{ config.mAISDeviceDataStructure.mDimensionExtD || "-" }}
+                        </li>
+                      </ul>
+                    </nb-tab>
+                    <nb-tab tabTitle="Meta Data">
+                      <ul>
+                        <li>
+                          Product Vendor: {{ config.mMetaData.mVendor }}
+                        </li>
+                        <li>
+                          Generated WiFi Password: {{ config.mMetaData.mGeneratedWifiPassword }}
+                        </li>
+                      </ul>
+                    </nb-tab>
+                  </nb-tabset>
+                </nb-accordion-item-body>
+              </nb-accordion-item>
+            </nb-accordion>
+            <span *ngIf="!isLast">&nbsp;</span>
+          </div>
         </div>
       </ng-container>
     </div>
@@ -162,148 +168,3 @@
   <div *ngIf="userIds.length === 0">No results, change email or mmsi</div>
 </div>
 <ng-template #loading>Loading&hellip;</ng-template>
-
-<h1>Darrens config widgets!</h1>
-<div *ngIf="userConfigs$ | async; let userConfigs; else loadingDarren">
-  <ng-container *ngFor="let item of userConfigs; last as isLast">
-    <nb-accordion>
-      <nb-accordion-item>
-        <nb-accordion-item-header *ngIf="item | async">
-          <ul>
-            <li *ngFor="let hello of item | async">
-              {{ hello.mProductName }}
-            </li>
-          </ul>
-        </nb-accordion-item-header>
-        <nb-accordion-item-body>
-          <nb-tabset>
-            <nb-tab tabTitle="Simple Tab #1">
-              Tab content 1
-            </nb-tab>
-            <nb-tab tabTitle="Simple Tab #2">
-              Tab content 2
-            </nb-tab>
-          </nb-tabset>
-          A nebula is an interstellar cloud of dust, hydrogen, helium and other ionized gases.
-          Originally, nebula was a name for any diffuse astronomical object,
-          including galaxies beyond the Milky Way.
-        </nb-accordion-item-body>
-      </nb-accordion-item>
-    </nb-accordion>
-    <span *ngIf="!isLast">&nbsp;</span>
-  </ng-container>
-</div>
-<ng-template #loadingDarren>Loading Dazza&hellip;</ng-template>
-<!-- <ng-container *ngIf="userConfigsArray; let userConfigsArray1; else loadingDarren">
-  <nb-accordion *ngFor="let item of userConfigsArray1; last as isLast">
-    <nb-accordion-item>
-      <nb-accordion-item-header>
-        {{ item.mManufacturerID }}
-      </nb-accordion-item-header>
-      <nb-accordion-item-body>
-        <nb-tabset>
-          <nb-tab tabTitle="Simple Tab #1">
-            Tab content 1
-          </nb-tab>
-          <nb-tab tabTitle="Simple Tab #2">
-            Tab content 2
-          </nb-tab>
-         </nb-tabset>
-        A nebula is an interstellar cloud of dust, hydrogen, helium and other ionized gases.
-        Originally, nebula was a name for any diffuse astronomical object,
-        including galaxies beyond the Milky Way.
-      </nb-accordion-item-body>
-    </nb-accordion-item>
-  </nb-accordion>      
-  <span *ngIf="!isLast">&nbsp;</span>
-</ng-container> -->
-
-
-<!-- <div *ngIf="userConfigsArray; let userConfigsArray1; else loadingDarren">
-      <nb-accordion *ngFor="let item of userConfigsArray1">
-        <nb-accordion-item>
-          <nb-accordion-item-header>
-            {{ item.mManufacturerID }}
-          </nb-accordion-item-header>
-          <nb-accordion-item-body>
-            <nb-tabset>
-              <nb-tab tabTitle="Simple Tab #1">
-                Tab content 1
-              </nb-tab>
-              <nb-tab tabTitle="Simple Tab #2">
-                Tab content 2
-              </nb-tab>
-             </nb-tabset>
-            A nebula is an interstellar cloud of dust, hydrogen, helium and other ionized gases.
-            Originally, nebula was a name for any diffuse astronomical object,
-            including galaxies beyond the Milky Way.
-          </nb-accordion-item-body>
-        </nb-accordion-item>
-      </nb-accordion>      
-</div> -->
-
-
-<h1>Firebase widgets!</h1>
-<div *ngIf="userIds$ | async; let userIds; else loading">
-  <ul>
-    <li *ngFor="let item of userIds">
-      {{ item.payload.val().text }}
-      <code>{{ item.payload.val().EMAIL }}</code>
-    </li>
-  </ul>
-  <div *ngIf="userIds.length === 0">No results, try clearing filters</div>
-</div>
-<ng-template #loading>Loading&hellip;</ng-template>
-<div>
-  <h4>Filter by size</h4>
-  <button (click)="filterBy('small')">Small</button>
-  <button (click)="filterBy('medium')">Medium</button>
-  <button (click)="filterBy('large')">Large</button>
-  <button (click)="filterBy('x-large')">Extra Large</button>
-  <button (click)="filterBy(null)" *ngIf="this.users$.getValue()">
-    <em>clear filter</em>
-  </button>
-</div>
-
-<nb-card>
-  <nb-card-body class="example-items-rows">
-    <nb-icon icon="power-outline"></nb-icon>
-    <nb-icon icon="star"></nb-icon>
-  </nb-card-body>
-</nb-card>
-
-<nb-card>
-  <nb-card-body class="example-items-rows">
-    <input type="text" nbInput placeholder="Text field">
-    <input type="text" nbInput placeholder="Disabled Text field" disabled>
-  </nb-card-body>
-</nb-card>
-
-<!-- <nb-card size="small">
-  <nb-card-body>
-
-    <nb-form-field>
-      <input [type]="getInputType()" nbInput>
-      <button nbSuffix nbButton ghost (click)="toggleShowPassword()">
-        <nb-icon [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'"
-                 pack="eva"
-                 [attr.aria-label]="showPassword ? 'hide password' : 'show password'">
-        </nb-icon>
-      </button>
-    </nb-form-field>
-
-  </nb-card-body>
-</nb-card> -->
-
-<nb-search type="rotate-layout"></nb-search>
-
-<!-- <nb-card >
-  <nb-card-header>
-User configs
-  </nb-card-header>
-  <nb-card-body [nbSpinner]="tableDataLoading" nbSpinnerSize="giant" nbSpinnerStatus="warning">
-    <div *ngIf="itemsList | async as items">
-      <ng2-smart-table [settings]="settings" [source]="items" (custom)="onCustom($event)" ></ng2-smart-table>
-    </div>
-  </nb-card-body>
-</nb-card> -->
