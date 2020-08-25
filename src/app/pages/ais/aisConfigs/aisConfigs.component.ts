@@ -1,13 +1,12 @@
-import { Component, ɵConsole } from '@angular/core';
-import { Observable, of, Subscription, combineLatest, forkJoin, pipe, from } from 'rxjs';
-import { map, scan, switchMap, mergeMap, mapTo, toArray, merge, flatMap } from 'rxjs/operators';
-import { AngularFireDatabase, AngularFireList, AngularFireAction } from '@angular/fire/database';
+import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map, flatMap } from 'rxjs/operators';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AisConfigurationItem } from '../aisConfigurations/aisConfigurationItem';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/concatMap';
 import { Subject } from 'rxjs/Subject';
-import { debug } from 'console';
 
 @Component({
   selector: 'ngx-dashboard',
@@ -80,14 +79,13 @@ export class AisConfigsComponent {
     //sets up the search 
     this.userConfigs$ = this.userIds$.pipe(
       map(userids =>
-        userids.map(userid => {
-          console.log("goop " + userid.key)
-          return this.database.list('/AIS/USERSAVEDCONFIGS/' + userid.key).snapshotChanges().pipe(
+        userids.map(userid =>
+          this.database.list('/AIS/USERSAVEDCONFIGS/' + userid.key).snapshotChanges().pipe(
             map(changes =>
               AisConfigurationItem.fromFirebaseList(changes)
             )
           )
-        })
+        )
       )
     )
   }
