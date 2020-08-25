@@ -21,6 +21,8 @@ export class AisConfigsComponent {
   mmsis$: Subject<string | null>;
   resultsLimit = 5;
   database: AngularFireDatabase;
+  filterEmail: string;
+  filterMmsi: string;
 
   constructor(
     db: AngularFireDatabase,
@@ -35,12 +37,8 @@ export class AisConfigsComponent {
   setupUserEmailSearch() {
     //setup what happens when data is entered into the email search box
     this.userIds$ = this.users$.switchMap(email =>
-      this.database.list('/USERS/', ref => {
-        //email = "darr"
-        let temp = email ? ref.orderByChild('EMAIL').startAt(email).endAt(email + "\uf8ff").limitToFirst(this.resultsLimit) : ref.limitToLast(this.resultsLimit)
-        console.log('carrot');
-        return temp;
-      }
+      this.database.list('/USERS/', ref => 
+        email ? ref.orderByChild('EMAIL').startAt(email).endAt(email + "\uf8ff").limitToFirst(this.resultsLimit) : ref.limitToLast(this.resultsLimit)
       ).snapshotChanges()
     );
 
@@ -91,6 +89,8 @@ export class AisConfigsComponent {
   }
 
   onKeyUpEventMmsi(event: any) {
+    //Wipe anything entered into the mmsi field
+    this.filterEmail = '';
     console.log("mmsi" + event.target.value);
     //Only start when we have 4 or more chars
     if (event.target.value.length >= 4) {
@@ -105,6 +105,8 @@ export class AisConfigsComponent {
   }
 
   onKeyUpEventEmail(event: any) {
+    //Wipe anything entered into the mmsi field
+    this.filterMmsi = '';
     console.log(event.target.value);
     //Only start when we have 4 or more chars
     if (event.target.value.length >= 4) {

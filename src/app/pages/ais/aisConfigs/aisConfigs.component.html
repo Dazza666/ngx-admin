@@ -2,24 +2,20 @@
 
 <nb-card>
   <nb-card-header>
-    Search users AIS configurations by email (min 4 chars) or MMSI (min 4 numbers):
+    Search users AIS configurations by email (min 4 chars) or MMSI (min 4 numbers) You can only search by one type at a time:
   </nb-card-header>
   <nb-card-body>
     <nb-form-field>
       <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
-      <input type="text" (keyup)="onKeyUpEventEmail($event)" nbInput placeholder="Email">
+      <input [(ngModel)]="filterEmail" name="filterEmail" type="text" (keyup)="onKeyUpEventEmail($event)" nbInput placeholder="Email" nbTooltip="Will return all configs by email address, matches partial prefix email addresses (min 4 char) e.g. 'ocea' will return all users whose emails start with 'ocea'" nbTooltipStatus="secondary">
     </nb-form-field>
+    &nbsp;
     <nb-form-field>
       <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
-      <input type="text" (keyup)="onKeyUpEventMmsi($event)" nbInput placeholder="MMSI">
+      <input [(ngModel)]="filterMmsi" name="filterMmsi" type="text" (keyup)="onKeyUpEventMmsi($event)" nbInput placeholder="MMSI" nbTooltip="Will return the single most relevant MMSI, padded with 0 up to 9 characters long, e.g. 2080 will search for 208000000" nbTooltipStatus="secondary">
     </nb-form-field>
   </nb-card-body>
 </nb-card>
-
-<div *ngIf="mmsis$ | async;">
-
-
-</div>
 
 <div *ngIf="userIds$ | async; let userIds;">
   <h1>Top {{ resultsLimit }} Results</h1>
