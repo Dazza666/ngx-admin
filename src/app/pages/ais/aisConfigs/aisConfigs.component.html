@@ -7,14 +7,19 @@
   <nb-card-body>
     <nb-form-field>
       <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
-      <input type="text" (keyup)="onKeyUpEvent($event)" nbInput placeholder="Email or MMSI">
+      <input type="text" (keyup)="onKeyUpEventEmail($event)" nbInput placeholder="Email">
     </nb-form-field>
     <nb-form-field>
       <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
-      <input type="text" (keyup)="onKeyUpEvent($event)" nbInput placeholder="MMSI">
+      <input type="text" (keyup)="onKeyUpEventMmsi($event)" nbInput placeholder="MMSI">
     </nb-form-field>
   </nb-card-body>
 </nb-card>
+
+<div *ngIf="mmsis$ | async;">
+
+
+</div>
 
 <div *ngIf="userIds$ | async; let userIds;">
   <h1>Top {{ resultsLimit }} Results</h1>
@@ -23,8 +28,7 @@
       <ng-container *ngFor="let thisUsersConfigs of filteredAllUserConfigs; let userConfigIndex = index;">
         <div *ngIf="userIndex == userConfigIndex">
           <h1>{{ userid.payload.val().EMAIL || "(No email)"}} ({{ userid.key }})</h1>
-          <!-- <h1>whoop : {{thisUsersConfigs | async | json}}</h1>  -->
-          <div *ngIf="(thisUsersConfigs | async).length === 0">No configurations found</div>
+          <div *ngIf="(thisUsersConfigs | async)?.length === 0">No configurations found</div>
           <div *ngFor="let config of thisUsersConfigs | async; last as isLast;">
             <nb-accordion>
               <nb-accordion-item>
