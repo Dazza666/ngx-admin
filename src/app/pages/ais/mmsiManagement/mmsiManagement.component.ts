@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Observable, } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { map, } from 'rxjs/operators';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { ViewCell } from 'ng2-smart-table';
 import { NbToastrService, NbDialogService } from '@nebular/theme';
@@ -43,8 +43,9 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   templateUrl: './mmsiManagement.component.html',
 })
 export class MmsiManagementComponent {
-  itemsRefList: AngularFireList<any>;
-  itemsList: Observable<any[]>;
+  mmsiRefList: AngularFireList<any>;
+  mmsiRefListLocked: AngularFireList<any>;
+  mmsiList: Observable<any[]>;
   tableDataLoading = true;
   settings: any;
 
@@ -53,12 +54,18 @@ export class MmsiManagementComponent {
     private toastrService: NbToastrService,
     private dialogService: NbDialogService,
   ) {
-    //The reference to the location we want to get data from
-    this.itemsRefList = db.list('/AIS/MMSI/');
-    //Whats happening here, we are syncing the list data locally, then piping that input into a map, which iterates over the returned array of data, and we are
-    //changing some of the content, so the product field contains the key, in this case maybe its ATB1, and then the firmware field contains the value of the 'latest' child node, in this case maybe 1.0.0
-    this.itemsList = this.itemsRefList.snapshotChanges().pipe(
-      map(changes => {
+    //The reference to the location we want to get data from, with query ordering results by 'requestClear'
+    this.mmsiRefList = db.list('/AIS/MMSI/', ref =>
+      ref.orderByChild('state').equalTo('requestClear')
+    );
+    //The reference to the location we want to get data from, with query ordering results by 'locked'
+    this.mmsiRefListLocked = db.list('/AIS/MMSI/', ref =>
+      ref.orderByChild('state').equalTo('locked')
+    );
+    //What is this magic?
+    //So, we are using combineLatest here. It takes the data from both obserables to particular references
+    this.mmsiList = combineLatest(this.mmsiRefList.snapshotChanges(), this.mmsiRefListLocked.snapshotChanges())
+      .pipe(map(x => x[0].concat(x[1]))).pipe(map(changes => {
         let temp = changes.map(c => ({
           mmsi: c.payload.key,
           state: c.payload.val().state,
@@ -67,9 +74,10 @@ export class MmsiManagementComponent {
           ref: c.payload.ref,
         }))
         this.stopLoading();
-        return temp
-      })
-    );
+        return temp;
+      }));
+
+    //Set the table up, ready for our data
     this.setupTable();
   }
 
@@ -91,25 +99,25 @@ export class MmsiManagementComponent {
       { position, status });
   }
 
-  private showReasonDialog(row, autoFocus: boolean) {
+  private showReasonDialog(row) {
     //Define the options we want to provide to the user
     let radioOptions = [
       { value: 'Request denied: Not Permitted', label: 'Not permitted', checked: true } as RadioOptions,
-      { value: 'Request denied: This MMSI was programmed by another user', label: 'Not programmed by this user' }  as RadioOptions,
-      { value: 'Request denied: Unknown', label: 'Unknown' }  as RadioOptions,
+      { value: 'Request denied: This MMSI was programmed by another user', label: 'Not programmed by this user' } as RadioOptions,
+      { value: 'Request denied: Unknown', label: 'Unknown' } as RadioOptions,
     ]
-    
+
     this.dialogService.open(DialogComponent, {
       context: {
         title: 'Select the reason this MMSI release request is being denied and press Ok, press Cancel to abort.',
         options: radioOptions,
         status: 'danger',
       },
-    }).onClose.subscribe(result => { 
+    }).onClose.subscribe(result => {
       console.log(result);
-      this.updateReference(row.ref, "locked" , result);
+      this.updateReference(row.ref, "locked", result);
       this.showToast('top-right', 'success', 'successfully locked');
-     });
+    });
   }
 
   setupTable() {
@@ -140,13 +148,13 @@ export class MmsiManagementComponent {
           title: 'Actions',
           type: 'custom',
           renderComponent: ButtonViewComponent,
-          onComponentInitFunction:(instance) => {
+          onComponentInitFunction: (instance) => {
             instance.clickYes.subscribe(row => {
-              this.updateReference(row.ref, "released" , "Your MMSI release request has been accepted");
+              this.updateReference(row.ref, "released", "Your MMSI release request has been accepted");
               this.showToast('top-right', 'success', 'successfully released');
             });
             instance.clickNo.subscribe(row => {
-              this.showReasonDialog(row, true);
+              this.showReasonDialog(row);
             });
           }
         },

@@ -1,10 +1,18 @@
-<nb-card >
+<nb-card>
   <nb-card-header>
-  MMSI Release Requests
+    MMSI Release Requests
   </nb-card-header>
-  <nb-card-body>
-    <div *ngIf="itemsList | async as items">
-      <ng2-smart-table [settings]="settings" [source]="items"></ng2-smart-table>
+  <nb-card-body [nbSpinner]="tableDataLoading" nbSpinnerSize="giant" nbSpinnerStatus="warning">
+    <div *ngIf="mmsiList | async as items;">
+      <div *ngIf="items.length === 0; else table">
+        <nb-alert accent="info">
+          There are currently no locked MMSI numbers, or any pending release requests. Don't worry though, this page updates live - if any come in you will see them straight away!
+        </nb-alert>
+      </div>
+      <ng-template #table>
+        <ng2-smart-table [settings]="settings" [source]="items"></ng2-smart-table>
+      </ng-template>
     </div>
+
   </nb-card-body>
 </nb-card>
