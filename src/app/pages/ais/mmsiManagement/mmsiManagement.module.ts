@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NbCardModule, NbTabsetModule, NbSpinnerModule } from '@nebular/theme';
+import { NbCardModule, NbTabsetModule, NbSpinnerModule, NbButtonModule } from '@nebular/theme';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ThemeModule } from '../../../@theme/theme.module';
 import { MmsiManagementComponent } from './mmsiManagement.component';
@@ -11,6 +11,7 @@ import { MmsiManagementComponent } from './mmsiManagement.component';
     NbCardModule,
     ThemeModule,
     NbSpinnerModule,
+    NbButtonModule,
   ],
   declarations: [
     MmsiManagementComponent,

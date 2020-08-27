@@ -1,7 +1,41 @@
-import { Component } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Observable, } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+import { ViewCell } from 'ng2-smart-table';
+import { NbToastrService, NbDialogService } from '@nebular/theme';
+import { DialogComponent } from '../../../components/dialog.component';
+import { RadioOptions } from '../../../components/RadioOptions';
+
+@Component({
+  selector: 'button-view',
+  styleUrls: ['../../../@theme/styles/themes.scss'],
+  template: `
+  <button class="button buttonYes" (click)="onClickYes()"> Release </button> Or <button class="button buttonNo" (click)="onClickNo()"> Reject </button>
+  `,
+})
+
+export class ButtonViewComponent implements ViewCell, OnInit {
+  renderValue: string;
+
+  @Input() value: string | number;
+  @Input() rowData: any;
+
+  @Output() clickYes: EventEmitter<any> = new EventEmitter();
+  @Output() clickNo: EventEmitter<any> = new EventEmitter();
+
+  ngOnInit() {
+    this.renderValue = this.value.toString().toUpperCase();
+  }
+
+  onClickYes() {
+    this.clickYes.emit(this.rowData);
+  }
+  onClickNo() {
+    this.clickNo.emit(this.rowData);
+  }
+
+}
 
 @Component({
   selector: 'ngx-dashboard',
@@ -12,9 +46,12 @@ export class MmsiManagementComponent {
   itemsRefList: AngularFireList<any>;
   itemsList: Observable<any[]>;
   tableDataLoading = true;
+  settings: any;
 
   constructor(
     db: AngularFireDatabase,
+    private toastrService: NbToastrService,
+    private dialogService: NbDialogService,
   ) {
     //The reference to the location we want to get data from
     this.itemsRefList = db.list('/AIS/MMSI/');
@@ -32,50 +69,83 @@ export class MmsiManagementComponent {
         this.stopLoading();
         return temp
       })
-      );
+    );
+    this.setupTable();
   }
 
   stopLoading() {
     this.tableDataLoading = false;
   }
 
-  onCustom(event) {
-    alert(`Custom event '${event.action}' fired on row №: ${event.data.id}`)
+  private showToast(position, status, message) {
+    this.toastrService.show(
+      status || 'Success',
+      message,
+      { position, status });
   }
 
-  settings = {
-    actions:{
-      add:false,
-      edit:false,
-      delete:false,
-      custom: [
-        {
-          name: 'accept',
-          title: '<i class="nb-checkmark inline-block width: 50px"></i>',
+  private showReasonDialog(row, autoFocus: boolean) {
+    //Define the options we want to provide to the user
+    let radioOptions = [
+      { value: 'Request denied: Not Permitted', label: 'Not permitted', checked: true } as RadioOptions,
+      { value: 'Request denied: This MMSI was programmed by another user', label: 'Not programmed by this user' }  as RadioOptions,
+      { value: 'Request denied: Unknown', label: 'Unknown' }  as RadioOptions,
+    ]
+
+    //console.log(radioOptions)
+    
+    this.dialogService.open(DialogComponent, {
+      context: {
+        title: 'Select the reason this MMSI release request is being denied and press Ok, press Cancel to abort.',
+        options: radioOptions,
+        status: 'danger',
+      },
+    }).onClose.subscribe(result => { console.log(result) });
+  }
+
+  setupTable() {
+    this.settings = {
+      actions: {
+        add: false,
+        edit: false,
+        delete: false,
+      },
+      columns: {
+        mmsi: {
+          title: 'MMSI',
+          editable: false,
         },
-        {
-          name: 'deny',
-          title: '<i class="nb-close inline-block width: 50px"></i>',
+        state: {
+          title: 'State',
+          editable: false,
         },
-      ],
-    },
-    columns: {
-      mmsi: {
-        title: 'MMSI',
-        editable: false,
+        vendor: {
+          title: 'Vendor',
+          editable: false,
+        },
+        userid: {
+          title: 'UserId',
+          editable: false,
+        },
+        button: {
+          title: 'Actions',
+          type: 'custom',
+          renderComponent: ButtonViewComponent,
+          onComponentInitFunction:(instance) => {
+            instance.clickYes.subscribe(row => {
+              var updates = {};
+              updates["/state"] = "released";
+              updates["/message"] = "Your MMSI release request has been accepted";
+              row.ref.update(updates);
+              this.showToast('top-right', 'success', 'successfully released');
+            });
+            instance.clickNo.subscribe(row => {
+              this.showReasonDialog(row, true);
+            });
+          }
+        },
       },
-      state: {
-        title: 'State',
-        editable: false,
-      },
-      vendor: {
-        title: 'Vendor',
-        editable: false,
-      },
-      userid: {
-        title: 'UserId',
-        editable: false,
-      },
-    },
-  };
+    };
+  }
 }
+

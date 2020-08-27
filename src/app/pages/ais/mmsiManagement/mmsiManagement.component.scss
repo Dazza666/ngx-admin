@@ -1,13 +1,40 @@
 @import '../../../@theme/styles/themes';
 
-:host ::ng-deep tr .ng2-smart-actions{ display: flex; }
+// :host ::ng-deep tr .ng2-smart-actions{ display: flex; }
 
-:host ::ng-deep nbng2-st-tbody-custom {display: flex;}
+// :host ::ng-deep nbng2-st-tbody-custom {display: flex;}
 
-:host ::ng-deep ng2-st-tbody-edit-delete a.ng2-smart-action {display: inline-block !important;}
-:host ::ng-deep ng2-st-tbody-create-cancel a.ng2-smart-action {display: inline-block !important;}
-:host ::ng-deep ng2-st-tbody-custom a.ng2-smart-action.ng2-smart-action-custom-custom {
-    display: inline-block;
-    width: 80px;
+// :host ::ng-deep ng2-st-tbody-edit-delete a.ng2-smart-action {display: inline-block !important;}
+// :host ::ng-deep ng2-st-tbody-create-cancel a.ng2-smart-action {display: inline-block !important;}
+// :host ::ng-deep ng2-st-tbody-custom a.ng2-smart-action.ng2-smart-action-custom-custom {
+//     display: inline-block;
+//     width: 80px;
+//     text-align: center;
+// }
+
+:host ::ng-deep button {
+    background-color: nb-theme(background-basic-color-1);
+    border: none;
+    color: white;
+    padding: 15px 32px;
     text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: nb-theme(button-rectangle-border-radius);
+    transition-duration: 0.4s;
+}
+
+:host ::ng-deep .button:hover {
+    background-color:nb-theme(color-info-500);
+    color: white;
+  }
+
+:host ::ng-deep .buttonYes {
+    background-color: nb-theme(color-success-500);
+}
+
+:host ::ng-deep .buttonNo {
+    background-color: nb-theme(color-danger-500);
 }
