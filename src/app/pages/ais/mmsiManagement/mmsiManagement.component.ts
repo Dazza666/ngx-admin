@@ -77,6 +77,13 @@ export class MmsiManagementComponent {
     this.tableDataLoading = false;
   }
 
+  private updateReference(ref, state, message) {
+    var updates = {};
+    updates["/state"] = state;
+    updates["/message"] = message;
+    ref.update(updates);
+  }
+
   private showToast(position, status, message) {
     this.toastrService.show(
       status || 'Success',
@@ -91,8 +98,6 @@ export class MmsiManagementComponent {
       { value: 'Request denied: This MMSI was programmed by another user', label: 'Not programmed by this user' }  as RadioOptions,
       { value: 'Request denied: Unknown', label: 'Unknown' }  as RadioOptions,
     ]
-
-    //console.log(radioOptions)
     
     this.dialogService.open(DialogComponent, {
       context: {
@@ -100,7 +105,11 @@ export class MmsiManagementComponent {
         options: radioOptions,
         status: 'danger',
       },
-    }).onClose.subscribe(result => { console.log(result) });
+    }).onClose.subscribe(result => { 
+      console.log(result);
+      this.updateReference(row.ref, "locked" , result);
+      this.showToast('top-right', 'success', 'successfully locked');
+     });
   }
 
   setupTable() {
@@ -133,10 +142,7 @@ export class MmsiManagementComponent {
           renderComponent: ButtonViewComponent,
           onComponentInitFunction:(instance) => {
             instance.clickYes.subscribe(row => {
-              var updates = {};
-              updates["/state"] = "released";
-              updates["/message"] = "Your MMSI release request has been accepted";
-              row.ref.update(updates);
+              this.updateReference(row.ref, "released" , "Your MMSI release request has been accepted");
               this.showToast('top-right', 'success', 'successfully released');
             });
             instance.clickNo.subscribe(row => {
