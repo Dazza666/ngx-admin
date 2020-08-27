@@ -18,8 +18,8 @@ import { RadioOptions } from './RadioOptions';
     </nb-radio-group>
       </nb-card-body>
       <nb-card-footer>
-        <button nbButton status="success" (click)="dismiss()">Cancel</button>
-        <button nbButton status="danger" (click)="confirm(selectedOption)">Ok</button>
+        <button class="float-right" nbButton status="danger" (click)="dismiss()">Cancel</button>
+        <button nbButton float-right status="success" (click)="confirm(selectedOption)">Ok</button>
       </nb-card-footer>
     </nb-card>
   `,
