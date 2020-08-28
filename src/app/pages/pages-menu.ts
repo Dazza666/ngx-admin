@@ -37,11 +37,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     children: [
       {
         title: 'E100',
-        link: '/auth/login',
+        link: '/pages/support/support',
       },
       {
         title: 'V100',
-        link: '/auth/register',
+        link: '/pages/support/support',
       },
     ],
   },
