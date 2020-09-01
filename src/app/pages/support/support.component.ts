@@ -7,10 +7,12 @@ import { AisConfigurationItem } from '../ais/aisConfigurations/aisConfigurationI
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/concatMap';
 import { Subject } from 'rxjs/Subject';
+import { SupportItem } from './supportItem/supportItem';
 
 @Component({
   selector: 'ngx-dashboard',
   templateUrl: './support.component.html',
+  styleUrls: ['./support.component.scss'],
 })
 export class SupportComponent {
   tableDataLoading = true;
@@ -23,8 +25,7 @@ export class SupportComponent {
   database: AngularFireDatabase;
   filterEmail: string;
   filterMmsi: string;
-  supportRequests$: Observable<any[]>;
-
+  supportRequests$: Observable<SupportItem[]> 
   constructor(
     db: AngularFireDatabase,
   ) {
@@ -36,19 +37,16 @@ export class SupportComponent {
 
     this.supportRequests$ = this.database.list("SUPPORT/vendor/oceansignal/programs/v100/requests/").snapshotChanges().pipe(
       map(changes => {
-       let temp = changes.map(c => ({ 
-          id: c.key,
-          details: c.payload,
-          ref: c.payload.ref,
-        }))
-        console.log(changes.keys().next()); 
-        console.log(changes.values().next()); 
-        this.stopLoading();
-        console.log("worms");
-       //map is done here, should be able to call other code
-       return temp;
-      })
-    );
+
+        //for (let change of changes){
+          return SupportItem.fromFirebaseList(changes)
+       // }
+
+         //changes.forEach(jeff => { return SupportItem.fromFirebaseList(jeff)} ) 
+      }
+       
+        )
+      );
 
   }
 

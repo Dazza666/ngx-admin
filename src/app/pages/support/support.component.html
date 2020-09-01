@@ -5,13 +5,46 @@
     <p>List of <strong>users</strong>.</p>
     <div *ngIf="supportRequests$ | async as supportRequests;">
       {{supportRequests | json}}
-      <div *ngFor="let supportRequest of supportRequests;"></div>
-      <!-- {{supportRequest.id}} -->
+      &nbsp;
+      Hi my name is 
+      &nbsp;
+
+      <table class="blueTable">
+        <thead>
+          <tr>
+            <th> ID </th>
+            <th> Details </th>
+            <th> Action </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let supportRequest of supportRequests;">
+            <th scope="row">{{supportRequest.supportRequestInfo.ADDRESS_1}}</th>
+            <td>{{supportRequest.supportRequestInfo.ADDRESS_1}}</td>
+            <td>2</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div *ngFor="let supportRequest of supportRequests;">
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        {{supportRequest.id}}
+        &nbsp;
+        &nbsp;
+        &nbsp;
+      </div>
+      &nbsp;
+      
+      &nbsp;
       Hello
+
     </div>
   </nb-tab>
   <nb-tab tabTitle="Authorised" tabIcon="award-outline" responsive>
     <p>List of <strong>orders</strong>.</p>
+
   </nb-tab>
   <nb-tab tabTitle="Completed" tabIcon="smiling-face-outline" responsive>
     <p>List of <strong>transactions</strong>.</p>
