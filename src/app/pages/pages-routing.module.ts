@@ -8,7 +8,6 @@ import { UserManagementComponent } from './userManagement/userManagement.compone
 import { MmsiManagementComponent } from './ais/mmsiManagement/mmsiManagement.component';
 import { AisConfigsComponent } from './ais/aisConfigs/aisConfigs.component';
 import { SupportComponent } from './support/support.component';
-// import { BasicExampleDataComponent } from './firmware/firmware.component';
 
 const routes: Routes = [{
   path: '',

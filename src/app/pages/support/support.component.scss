@@ -1,47 +1,59 @@
-table.blueTable {
-    border: 1px solid #1C6EA4;
+@import '../../@theme/styles/themes';
+
+table.supportTable {
+    border: 1px solid nb-theme(color-basic-100);
     background-color: #EEEEEE;
     width: 100%;
     text-align: left;
     border-collapse: collapse;
   }
-  table.blueTable td, table.blueTable th {
+  table.supportTable td, table.supportTable th {
     border: 1px solid #AAAAAA;
     padding: 3px 2px;
   }
-  table.blueTable tbody td {
-    font-size: 13px;
+  table.supportTable tbody td {
+    font-size: 18px;
   }
-  table.blueTable tr:nth-child(even) {
-    background: #D0E4F5;
+  table.supportTable tr:nth-child(even) {
+    background: nb-theme(color-basic-600);
   }
-  table.blueTable thead {
-    background: #1C6EA4;
-    background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-    background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-    background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-    border-bottom: 2px solid #444444;
+  table.supportTable tr:nth-child(odd) {
+    background: nb-theme(color-basic-700);
   }
-  table.blueTable thead th {
+  table.supportTable thead {
+    background: nb-theme(color-basic-900);
+    background: -moz-linear-gradient(top, nb-theme(color-basic-100) 0%, nb-theme(color-basic-500) 66%, nb-theme(color-basic-900) 100%);
+    background: -webkit-linear-gradient(top, nb-theme(color-basic-100) 0%, nb-theme(color-basic-500) 66%, nb-theme(color-basic-900) 100%);
+    background: linear-gradient(to bottom, nb-theme(color-basic-100) 0%, nb-theme(color-basic-500) 66%, nb-theme(color-basic-900) 100%);
+    border-bottom: 2px solid nb-theme(color-primary-400);
+  }
+  table.supportTable thead th {
     font-size: 15px;
     font-weight: bold;
     color: #FFFFFF;
     border-left: 2px solid #D0E4F5;
   }
-  table.blueTable thead th:first-child {
+  table.supportTable thead th:first-child {
     border-left: none;
   }
   
-  table.blueTable tfoot td {
+  table.supportTable tfoot td {
     font-size: 14px;
   }
-  table.blueTable tfoot .links {
+  table.supportTable tfoot .links {
     text-align: right;
   }
-  table.blueTable tfoot .links a{
+  table.supportTable tfoot .links a{
     display: inline-block;
     background: #1C6EA4;
     color: #FFFFFF;
     padding: 2px 8px;
     border-radius: 5px;
   }
+  
+input[type="text"], textarea { 
+    padding: 0;
+    margin: 0;
+    width:600px; 
+    height:400px;
+}
