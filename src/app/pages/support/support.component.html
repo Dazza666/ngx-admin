@@ -1,8 +1,17 @@
 <h1>E100 Support Program</h1>
 
-<nb-tabset>
+<nb-tabset *ngIf="supportRequests$ | async as supportRequests;">
+  <!-- holds the submmited requests -->
   <nb-tab tabTitle="Submitted" tabIcon="clipboard-outline" responsive>
-    <div *ngIf="supportRequests$ | async as supportRequests;">
+    <ng-container *ngIf="hasSubmitted; then submittedTable; else noSubmittedData">
+    </ng-container>
+    <ng-template #noSubmittedData>
+      <div>
+        <nb-alert accent="success" class="justify-content-center">There are currently no submitted support requests to
+          action</nb-alert>
+      </div>
+    </ng-template>
+    <ng-template #submittedTable>
       <table class="supportTable">
         <thead>
           <tr class="text-center">
@@ -12,55 +21,196 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let supportRequest of supportRequests;">
-            <th scope="row">{{supportRequest.getId()}}</th>
-            <td class="text-center">
-              <!-- the inner table, which shows the product info like serial etc -->
-              <table class="supportTable" width="50%">
-                <tbody>
-                  <tr class="text-center" *ngFor="let productDetails of supportRequest['productInfo']">
-                    <td class="text-center">
-                      {{productDetails.getFormattedSerial()}}
-                      <br>
-                      {{productDetails.getFormattedBatteryExpiry()}}
-                    </td>
-                    <td class="text-center">
-                      <button nbButton status="info" (click)='generateImagePath(supportRequest.getUnformattedId(), productDetails)'>Load Image</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- the inner table, end -->
-              {{supportRequest.getReplacementText()}}
-              <br>
-              <br>
-              <div [innerHtml]="supportRequest.getAddress()"></div>
-              <br>
-              <div *ngIf="supportRequest.isAddressPerm() else notperm">
-                <nb-alert accent="success" class="justify-content-center">Permanent Address</nb-alert>
-              </div>
-              <ng-template #notperm>
-                <nb-alert accent="warning">supportRequest.getAddressValidRange()</nb-alert>
-              </ng-template>
-              {{supportRequest.getPhoneNumber()}}
-              <br>
-              <br>
-              <a href="mailto:{{supportRequest.getEmail()}}">{{supportRequest.getEmail()}}</a>
-            </td>
-            <td class="text-center">
-              <textarea #notes type="text" maxlength="3000">{{supportRequest.status.notes}}</textarea>
-              <button nbButton fullWidth status="info" (click)='updateNotes(supportRequest.ref, notes.value)'>Update Notes</button>
-            </td>
-          </tr>
+          <ng-container *ngFor="let supportRequest of supportRequests;">
+            <tr *ngIf="supportRequest.status.state == null">
+              <th scope="row">{{supportRequest.getId()}}</th>
+              <td class="text-center">
+                <!-- the inner table, which shows the product info like serial etc -->
+                <table class="supportTable" width="50%">
+                  <tbody>
+                    <tr class="text-center" *ngFor="let productDetails of supportRequest['productInfo']">
+                      <td class="text-center">
+                        {{productDetails.getFormattedSerial()}}
+                        <br>
+                        {{productDetails.getFormattedBatteryExpiry()}}
+                      </td>
+                      <td class="text-center">
+                        <button nbButton status="info"
+                          (click)='generateImagePath(supportRequest.getUnformattedId(), productDetails)'>Load
+                          Image</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- the inner table, end -->
+                {{supportRequest.getReplacementText()}}
+                <br>
+                <br>
+                <div [innerHtml]="supportRequest.getAddress()"></div>
+                <br>
+                <div *ngIf="supportRequest.isAddressPerm() else notperm">
+                  <nb-alert accent="success" class="justify-content-center">Permanent Address</nb-alert>
+                </div>
+                <ng-template #notperm>
+                  <nb-alert accent="warning">supportRequest.getAddressValidRange()</nb-alert>
+                </ng-template>
+                {{supportRequest.getPhoneNumber()}}
+                <br>
+                <br>
+                <a href="mailto:{{supportRequest.getEmail()}}">{{supportRequest.getEmail()}}</a>
+              </td>
+              <td class="text-center">
+                <textarea #notes type="text" maxlength="3000">{{supportRequest.status.notes}}</textarea>
+                <button nbButton fullWidth status="info" (click)='updateNotes(supportRequest.ref, notes.value)'>Update
+                  Notes</button>
+                <br>
+                <br>
+                <button nbButton fullWidth status="success" (click)='authorise(supportRequest.ref)'>Authorise</button>
+                <br>
+                <br>
+                <button nbButton fullWidth status="danger" (click)='reject(supportRequest.ref)'>Reject</button>
+              </td>
+            </tr>
+          </ng-container>
         </tbody>
       </table>
-
-    </div>
+    </ng-template>
   </nb-tab>
   <nb-tab tabTitle="Authorised" tabIcon="award-outline" responsive>
-
+    <ng-container *ngIf="hasAuthorised; then authorisedTable; else noAuthorisedData">
+    </ng-container>
+    <ng-template #noAuthorisedData>
+      <div>
+        <nb-alert accent="success" class="justify-content-center">There are currently no authorised support requests to
+          action</nb-alert>
+      </div>
+    </ng-template>
+    <ng-template #authorisedTable>
+      <!-- holds the authorised requests -->
+      <table class="supportTable">
+        <thead>
+          <tr class="text-center">
+            <th class="id">ID</th>
+            <th class="details">Details</th>
+            <th class="action">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let supportRequest of supportRequests;">
+            <tr *ngIf="supportRequest.status.state == 'authorised'">
+              <th scope="row">{{supportRequest.getId()}}</th>
+              <td class="text-center">
+                <!-- the inner table, which shows the product info like serial etc -->
+                <table class="supportTable" width="50%">
+                  <tbody>
+                    <tr class="text-center" *ngFor="let productDetails of supportRequest['productInfo']">
+                      <td class="text-center">
+                        {{productDetails.getFormattedSerial()}}
+                        <br>
+                        {{productDetails.getFormattedBatteryExpiry()}}
+                      </td>
+                      <td class="text-center">
+                        <button nbButton status="info"
+                          (click)='generateImagePath(supportRequest.getUnformattedId(), productDetails)'>Load
+                          Image</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- the inner table, end -->
+                {{supportRequest.getReplacementText()}}
+                <br>
+                <br>
+                <div [innerHtml]="supportRequest.getAddress()"></div>
+                <br>
+                <div *ngIf="supportRequest.isAddressPerm() else notperm">
+                  <nb-alert accent="success" class="justify-content-center">Permanent Address</nb-alert>
+                </div>
+                <ng-template #notperm>
+                  <nb-alert accent="warning">supportRequest.getAddressValidRange()</nb-alert>
+                </ng-template>
+                {{supportRequest.getPhoneNumber()}}
+                <br>
+                <br>
+                <a href="mailto:{{supportRequest.getEmail()}}">{{supportRequest.getEmail()}}</a>
+              </td>
+              <td class="text-center">
+                <textarea #notes type="text" maxlength="3000">{{supportRequest.status.notes}}</textarea>
+                <button nbButton fullWidth status="success" (click)='shipped(supportRequest.ref)'>Shipped</button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </ng-template>
   </nb-tab>
   <nb-tab tabTitle="Completed" tabIcon="smiling-face-outline" responsive>
-
+    <ng-container *ngIf="hasCompleted; then completedTable; else noCompletedData">
+    </ng-container>
+    <ng-template #noCompletedData>
+      <div>
+        <nb-alert accent="success" class="justify-content-center">There are currently no completed support requests to
+          view</nb-alert>
+      </div>
+    </ng-template>
+    <ng-template #completedTable>
+      <!-- holds the completed requests -->
+      <table class="supportTable">
+        <thead>
+          <tr class="text-center">
+            <th class="id">ID</th>
+            <th class="details">Details</th>
+            <th class="action">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let supportRequest of supportRequests;">
+            <tr *ngIf="supportRequest.status.state == 'shipped'">
+              <th scope="row">{{supportRequest.getId()}}</th>
+              <td class="text-center">
+                <!-- the inner table, which shows the product info like serial etc -->
+                <table class="supportTable" width="50%">
+                  <tbody>
+                    <tr class="text-center" *ngFor="let productDetails of supportRequest['productInfo']">
+                      <td class="text-center">
+                        {{productDetails.getFormattedSerial()}}
+                        <br>
+                        {{productDetails.getFormattedBatteryExpiry()}}
+                      </td>
+                      <td class="text-center">
+                        <button nbButton status="info"
+                          (click)='generateImagePath(supportRequest.getUnformattedId(), productDetails)'>Load
+                          Image</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- the inner table, end -->
+                {{supportRequest.getReplacementText()}}
+                <br>
+                <br>
+                <div [innerHtml]="supportRequest.getAddress()"></div>
+                <br>
+                <div *ngIf="supportRequest.isAddressPerm() else notperm">
+                  <nb-alert accent="success" class="justify-content-center">Permanent Address</nb-alert>
+                </div>
+                <ng-template #notperm>
+                  <nb-alert accent="warning">supportRequest.getAddressValidRange()</nb-alert>
+                </ng-template>
+                {{supportRequest.getPhoneNumber()}}
+                <br>
+                <br>
+                <a href="mailto:{{supportRequest.getEmail()}}">{{supportRequest.getEmail()}}</a>
+              </td>
+              <td class="text-center">
+                <textarea #notes type="text" maxlength="3000">{{supportRequest.status.notes}}</textarea>
+                <button nbButton fullWidth status="info" (click)='updateNotes(supportRequest.ref, notes.value)'>Update
+                  Notes</button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </ng-template>
   </nb-tab>
 </nb-tabset>

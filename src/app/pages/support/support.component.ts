@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, first } from 'rxjs/operators';
+import { map, first, tap } from 'rxjs/operators';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { SupportItem } from './supportItem/supportItem';
@@ -15,6 +15,9 @@ export class SupportComponent {
   tableDataLoading = true;
   supportRequests$: Observable<SupportItem[]>;
   ImageUrls$: Observable<String>[];
+  hasSubmitted = false;
+  hasAuthorised = false;
+  hasCompleted = false;
   constructor(
     private db: AngularFireDatabase,
     private storage: AngularFireStorage,
@@ -22,10 +25,25 @@ export class SupportComponent {
 
     //get the support requests
     this.supportRequests$ = db.list("SUPPORT/vendor/oceansignal/programs/v100/requests/").snapshotChanges().pipe(
-      map(changes => 
+      map(changes =>
         //create all the items from our firebase object
         SupportItem.fromFirebaseList(changes)
-      )
+      ), tap(SupportItems => {
+        this.hasSubmitted = false;
+        this.hasAuthorised = false;
+        this.hasCompleted = false;
+        for (const item of SupportItems) {
+          if (item.status.state == null) {
+            this.hasSubmitted = true;
+          }
+          else if (item.status.state == 'authorised') {
+            this.hasAuthorised = true;
+          }
+          else if (item.status.state == 'shipped') {
+            this.hasCompleted = true;
+          }
+        }
+      })
     );
   }
 
@@ -46,16 +64,32 @@ export class SupportComponent {
 
   //We have the reference, we can now update the notes
   updateNotes(ref, updatedNotes: string) {
-    console.log("hello");
-    console.log(ref.key);
-    console.log(ref.parent);
-    console.log(updatedNotes);
-
     let notesPostData = {
       notes: updatedNotes
     };
 
     ref.child('status').update(notesPostData);
+  }
+
+  authorise(ref) {
+    let postData = {
+      state: "authorised"
+    };
+    ref.child('status').update(postData);
+  }
+
+  reject(ref) {
+    let postData = {
+      state: "rejected"
+    };
+    ref.child('status').update(postData);
+  }
+
+  shipped(ref) {
+    let postData = {
+      state: "shipped"
+    };
+    ref.child('status').update(postData);
   }
 
 }
