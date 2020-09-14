@@ -1,5 +1,5 @@
 import { Gdpr } from './gdpr';
-import { status } from './status';
+import { Status } from './status';
 import { SupportRequestInfo } from './supportRequestInfo';
 import { ProductInfo } from './productInfo';
 
@@ -9,10 +9,14 @@ export class SupportItem {
     public ref: any,
     public supportRequestInfo: SupportRequestInfo,
     public productInfo: ProductInfo[],
-    public status: status,
+    public status: Status,
     public GDPR: Gdpr,
   ) {
 
+  }
+
+  getUrl() {
+    return 'www.test.com'
   }
 
   getReplacementText() {
@@ -45,7 +49,11 @@ export class SupportItem {
   }
 
   getId() {
-    return `${this.ref.parent.key}/${this.ref.key}`
+    return `${this.ref.parent.key} / ${this.ref.key}`
+  }
+
+  getUnformattedId() {
+    return this.getId().replace(/ /g,'');
   }
 
   getAddress() {
@@ -70,7 +78,6 @@ export class SupportItem {
   }
 
   static fromFirebaseList(dataSnapshot): SupportItem[] {
-
     let results = [];
     //for each of the top level children of the dataSnapshot
     dataSnapshot.forEach(child => {
@@ -82,18 +89,13 @@ export class SupportItem {
     return results;
   }
 
-  // static fromJsonList(array): SupportItem[] {
-  //   //debugger;
-  //   return array.map(json => SupportItem.fromJson(json))
-  // }
-
   static fromJson(json, ref): SupportItem {
 
-    debugger;
+    // debugger;
     return new SupportItem(
       ref,
       json.supportRequestInfo,
-      json.productInfo,
+      ProductInfo.fromJsonList(json.productInfo),
       json.status,
       json.GDPR,
     );

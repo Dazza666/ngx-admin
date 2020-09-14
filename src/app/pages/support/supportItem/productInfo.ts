@@ -9,13 +9,26 @@ export class ProductInfo {
 
   }
 
+  getFormattedSerial() {
+    return `Serial: ${this.serialNumber}`;
+  }
+
+  getFormattedBatteryExpiry() {
+    return `Battery expiry: ${this.batteryExp}`;
+  }
+
+  //The list of products needs to be converted in a javascript array
   static fromJsonList(array): ProductInfo[] {
-    return array.map(json => ProductInfo.fromJson(json))
+    let results = [];
+    for (const [key, value] of Object.entries(array)) {
+      results.push(ProductInfo.fromJson(value as ProductInfo));
+    }
+    return results;
   }
 
   static fromJson({ batteryExp, serialNumber, vesselName, vesselType }): ProductInfo {
 
-    debugger;
+    // debugger;
     return new ProductInfo(
       batteryExp,
       serialNumber,

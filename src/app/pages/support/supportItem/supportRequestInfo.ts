@@ -24,7 +24,7 @@ export class SupportRequestInfo {
 
   static fromJson({ ADDRESS_1, ADDRESS_2, ADDRESS_3, ADR_END_DATE_VALID, ADR_START_DATE_VALID, COMPANY_NAME, COUNTRY, EMAIL, FIRST_NAME, LAST_NAME, PHONE, POST_CODE, TOWN }): SupportRequestInfo {
 
-    debugger;
+    // debugger;
     return new SupportRequestInfo(
       ADDRESS_1,
       ADDRESS_2,

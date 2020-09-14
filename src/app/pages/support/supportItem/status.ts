@@ -1,4 +1,4 @@
-export class status {
+export class Status {
 
   constructor(
     public notes: string,
@@ -8,14 +8,14 @@ export class status {
 
   }
 
-  static fromJsonList(array): status[] {
-    return array.map(json => status.fromJson(json))
+  static fromJsonList(array): Status[] {
+    return array.map(json => Status.fromJson(json))
   }
 
-  static fromJson({ notes, state, submissionState }): status {
+  static fromJson({ notes, state, submissionState }): Status {
 
     debugger;
-    return new status(
+    return new Status(
       notes,
       state,
       submissionState,
