@@ -15,7 +15,6 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'User Management',
     icon: 'people-outline',
     link: '/pages/user',
-    home: true,
   },
   {
     title: 'AIS',
@@ -36,12 +35,19 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'color-picker-outline',
     children: [
       {
-        title: 'E100',
-        link: '/pages/support/support',
-      },
-      {
         title: 'V100',
         link: '/pages/support/support',
+        queryParams: {productName: 'v100'},
+      },
+      {
+        title: 'SR203',
+        link: '/pages/support/support',
+        queryParams: {productName: 'sr203'},
+      },
+      {
+        title: 'E100',
+        link: '/pages/support/support',
+        queryParams: {productName: 'e100'}
       },
     ],
   },

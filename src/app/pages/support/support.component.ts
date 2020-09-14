@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, first, tap } from 'rxjs/operators';
+import { map, first, tap, flatMap } from 'rxjs/operators';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { SupportItem } from './supportItem/supportItem';
 import { ProductInfo } from './supportItem/productInfo';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'ngx-dashboard',
@@ -15,36 +16,44 @@ export class SupportComponent {
   tableDataLoading = true;
   supportRequests$: Observable<SupportItem[]>;
   ImageUrls$: Observable<String>[];
+  programName: string;
   hasSubmitted = false;
   hasAuthorised = false;
   hasCompleted = false;
   constructor(
     private db: AngularFireDatabase,
     private storage: AngularFireStorage,
+    private route: ActivatedRoute,
   ) {
 
-    //get the support requests
-    this.supportRequests$ = db.list("SUPPORT/vendor/oceansignal/programs/v100/requests/").snapshotChanges().pipe(
-      map(changes =>
-        //create all the items from our firebase object
-        SupportItem.fromFirebaseList(changes)
-      ), tap(SupportItems => {
-        this.hasSubmitted = false;
-        this.hasAuthorised = false;
-        this.hasCompleted = false;
-        for (const item of SupportItems) {
-          if (item.status.state == null) {
-            this.hasSubmitted = true;
+    //What is happening here?
+    
+    this.supportRequests$ = this.route.queryParams.pipe(map(parameters => {      
+      this.programName = parameters.productName;
+      return db.list(`SUPPORT/vendor/oceansignal/programs/${this.programName}/requests/`).snapshotChanges().pipe(
+        map(changes =>
+          //create all the items from our firebase object
+          SupportItem.fromFirebaseList(changes)
+        ), tap(SupportItems => {
+          this.hasSubmitted = false;
+          this.hasAuthorised = false;
+          this.hasCompleted = false;
+          for (const item of SupportItems) {
+            if (item.status.state == null) {
+              this.hasSubmitted = true;
+            }
+            else if (item.status.state == 'authorised') {
+              this.hasAuthorised = true;
+            }
+            else if (item.status.state == 'shipped') {
+              this.hasCompleted = true;
+            }
           }
-          else if (item.status.state == 'authorised') {
-            this.hasAuthorised = true;
-          }
-          else if (item.status.state == 'shipped') {
-            this.hasCompleted = true;
-          }
-        }
-      })
-    );
+        })
+      );
+    })
+    ).pipe(flatMap(listObservable => listObservable));
+
   }
 
   stopLoading() {

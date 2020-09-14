@@ -26,4 +26,4 @@ import { FormsModule as ngFormsModule } from '@angular/forms';
     SupportComponent,
   ],
 })
-export class AisConfigsModule { }
+export class SupportModule { }
