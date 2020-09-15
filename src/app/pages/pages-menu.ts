@@ -36,18 +36,19 @@ export const MENU_ITEMS: NbMenuItem[] = [
     children: [
       {
         title: 'V100',
-        link: '/pages/support/support',
+        link: '/pages/support/support/v100',
         queryParams: {productName: 'v100'},
       },
       {
         title: 'SR203',
-        link: '/pages/support/support',
+        link: '/pages/support/support/sr203',
         queryParams: {productName: 'sr203'},
       },
       {
         title: 'E100',
-        link: '/pages/support/support',
-        queryParams: {productName: 'e100'}
+        link: '/pages/support/support/e100',
+        queryParams: {productName: 'e100'},
+        pathMatch : "full",
       },
     ],
   },

@@ -33,9 +33,18 @@ const routes: Routes = [{
       component: AisConfigsComponent,
     },
     {
-      path: 'support/support',
+      path: 'support/support/v100',
       component: SupportComponent,
     },
+    {
+      path: 'support/support/sr203',
+      component: SupportComponent,
+    },
+    {
+      path: 'support/support/e100',
+      component: SupportComponent,
+    },
+
     {
       path: '',
       redirectTo: 'dashboard',
