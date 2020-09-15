@@ -27,8 +27,8 @@ export class SupportComponent {
   ) {
 
     //What is happening here?
-    
-    this.supportRequests$ = this.route.queryParams.pipe(map(parameters => {      
+
+    this.supportRequests$ = this.route.queryParams.pipe(map(parameters => {
       this.programName = parameters.productName;
       return db.list(`SUPPORT/vendor/oceansignal/programs/${this.programName}/requests/`).snapshotChanges().pipe(
         map(changes =>
@@ -60,15 +60,50 @@ export class SupportComponent {
     this.tableDataLoading = false;
   }
 
-  generateImagePath(id: string, productInfo: ProductInfo) {
-    //create the reference to the location
-    let ref = this.storage.ref(`/SUPPORT/vendor/oceansignal/programs/${this.programName}/` + id + '/' + productInfo.serialNumber + '_' + productInfo.batteryExp.replace('/', '_') + '.jpg');
+  generateReplacementText(supportRequest: SupportItem) {
 
-    //get the observable and pipe it through first, which will auto unsubcribe for us after the first value is returned
-    ref.getDownloadURL().pipe(first()).subscribe(url =>
-      window.open(url, productInfo.serialNumber + productInfo.batteryExp, "height=720,width=1280")
-    );
+    let result: string = null;
+    let replacementEPIRBCount = 0; //with no mount
+    let replacementEPIRB1ProCount = 0; //with mount
 
+    for (const product of supportRequest.productInfo) {
+      //If we have a failure, work out if its a pro or non pro product
+      if (product.result == "fail") {
+        if (product.mountedARH100 == "yes") {
+          replacementEPIRB1ProCount++;
+        }
+        else {
+          replacementEPIRBCount++;
+        }
+      }
+    }
+
+    if (replacementEPIRB1ProCount == 0 && replacementEPIRBCount == 0) {
+      result = 'There are no replacements to send for this request';
+    }
+    else {
+      var epirbPro = (replacementEPIRB1ProCount == 0) ? `` : ` ` + replacementEPIRB1ProCount + ` x EPIRB Pro <br>`;
+      var epirb = (replacementEPIRBCount == 0) ? `` : ` ` + replacementEPIRBCount + ` x rescueME EPIRB1 <br>`;
+      result = `Please send <br>` + epirb + epirbPro + ` replacement(s) to: <br>`;
+    }
+
+    return result;
+  }
+
+  hasFailures(supportRequest: SupportItem) {
+    for (const product of supportRequest.productInfo) {
+      if (product.result == "fail") {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  hasFailed(product: ProductInfo) {
+      if (product.result == "fail") {
+        return true;
+      }
+    return false;
   }
 
   //We have the reference, we can now update the notes

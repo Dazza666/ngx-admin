@@ -7,6 +7,7 @@ import { UserManagementComponent } from './userManagement/userManagement.compone
 import { MmsiManagementComponent } from './ais/mmsiManagement/mmsiManagement.component';
 import { AisConfigsComponent } from './ais/aisConfigs/aisConfigs.component';
 import { SupportComponent } from './support/v100/support.component';
+import { SupportComponent as SupportComponentE100 } from './support/e100/support.component';
 
 const routes: Routes = [{
   path: '',
@@ -42,7 +43,7 @@ const routes: Routes = [{
     },
     {
       path: 'support/e100/e100',
-      component: SupportComponent,
+      component: SupportComponentE100,
     },
 
     {

@@ -46,7 +46,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
       {
         title: 'E100',
-        link: '/pages/support/support/e100',
+        link: '/pages/support/e100/e100',
         queryParams: {productName: 'e100'},
         pathMatch : "full",
       },

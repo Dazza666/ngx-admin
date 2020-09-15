@@ -15,10 +15,6 @@ export class SupportItem {
 
   }
 
-  getUrl() {
-    return 'www.test.com'
-  }
-
   getReplacementText() {
     return `please send ${Object.keys(this.productInfo).length} replacement(s) to:`
   }
