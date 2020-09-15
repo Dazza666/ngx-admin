@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import { map, first, tap, flatMap } from 'rxjs/operators';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { SupportItem } from './supportItem/supportItem';
-import { ProductInfo } from './supportItem/productInfo';
+import { SupportItem } from '../supportItem/supportItem';
+import { ProductInfo } from '../supportItem/productInfo';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

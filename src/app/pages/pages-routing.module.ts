@@ -6,7 +6,7 @@ import { FirmwareComponent } from './firmware/firmware.component';
 import { UserManagementComponent } from './userManagement/userManagement.component';
 import { MmsiManagementComponent } from './ais/mmsiManagement/mmsiManagement.component';
 import { AisConfigsComponent } from './ais/aisConfigs/aisConfigs.component';
-import { SupportComponent } from './support/support.component';
+import { SupportComponent } from './support/v100/support.component';
 
 const routes: Routes = [{
   path: '',
@@ -33,15 +33,15 @@ const routes: Routes = [{
       component: AisConfigsComponent,
     },
     {
-      path: 'support/support/v100',
+      path: 'support/v100/v100',
       component: SupportComponent,
     },
     {
-      path: 'support/support/sr203',
+      path: 'support/v100/sr203',
       component: SupportComponent,
     },
     {
-      path: 'support/support/e100',
+      path: 'support/e100/e100',
       component: SupportComponent,
     },
 
