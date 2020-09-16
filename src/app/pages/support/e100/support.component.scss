@@ -62,3 +62,6 @@ input[type="text"], textarea {
     width:100%; 
     height:300px;
 }
+
+//makes the text on the chart white
+::ng-deep .ngx-charts { text { fill: #fff !important; } }

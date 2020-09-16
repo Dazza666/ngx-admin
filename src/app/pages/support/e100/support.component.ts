@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, first, tap, flatMap } from 'rxjs/operators';
+import { map, tap, flatMap } from 'rxjs/operators';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { SupportItem } from '../supportItem/supportItem';
 import { ProductInfo } from '../supportItem/productInfo';
@@ -29,7 +29,7 @@ export class SupportComponent {
   isDoughnut: boolean = false;
   legendPosition: string = 'below';
   colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+    domain: ['#A10A28', '#5AA454']
   };
 
   constructor(
@@ -75,17 +75,22 @@ export class SupportComponent {
     })
     ).pipe(flatMap(listObservable => listObservable));
 
-    this.stats$ = db.list('SUPPORT/vendor/oceansignal/programs/metadata/e100/statistics').snapshotChanges().pipe(
-      map(changes =>{
-        console.log("jimbob");
-       let temp = changes.map(c => ({
-          name: c.payload.key,
-          value: c.payload.val(),
-        }))
-        console.log(temp);
-       return temp;
-      })
-    );
+    //What is happening here? Because the support programs broadly follow the same structure, at least in there locations
+    //we are passing a query string into the URL, which, in turn is then used to form the location in the database where we are
+    //looking for our data. Once we have listened for snapshotChanges() on this location, we pull out the data and map it to the format
+    //required by the charting engine, before flatenning the data into one observable.
+    this.stats$ = this.route.queryParams.pipe(map(parameters => {
+      this.programName = parameters.productName;
+      return db.list('SUPPORT/vendor/oceansignal/programs/metadata/e100/statistics').snapshotChanges().pipe(
+        map(changes =>
+          changes.map(c => ({
+            name: c.payload.key,
+            value: c.payload.val(),
+          }))
+        )
+      );
+    })
+    ).pipe(flatMap(listObservable => listObservable));
 
   }
 
