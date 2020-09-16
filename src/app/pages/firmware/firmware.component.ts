@@ -6,7 +6,7 @@ import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 @Component({
   selector: 'ngx-dashboard',
   templateUrl: './firmware.component.html',
-  styleUrls: ['./smart-table.component.scss'],
+  styleUrls: ['./firmware.component.scss'],
 })
 export class FirmwareComponent {
   itemsRefList: AngularFireList<any>;
