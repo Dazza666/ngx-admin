@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, first, tap, flatMap } from 'rxjs/operators';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { AngularFireStorage } from '@angular/fire/storage';
 import { SupportItem } from '../supportItem/supportItem';
 import { ProductInfo } from '../supportItem/productInfo';
 import { ActivatedRoute } from '@angular/router';
@@ -15,19 +14,33 @@ import { ActivatedRoute } from '@angular/router';
 export class SupportComponent {
   tableDataLoading = true;
   supportRequests$: Observable<SupportItem[]>;
-  ImageUrls$: Observable<String>[];
   programName: string;
+  hasPassed = false;
   hasSubmitted = false;
   hasAuthorised = false;
   hasCompleted = false;
+  //chart data Observable
+  stats$: Observable<{ name: string; value: any; }[]>
+  // chart options
+  view: any[] = [700, 400];
+  gradient: boolean = true;
+  showLegend: boolean = true;
+  showLabels: boolean = true;
+  isDoughnut: boolean = false;
+  legendPosition: string = 'below';
+  colorScheme = {
+    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+  };
+
   constructor(
     private db: AngularFireDatabase,
-    private storage: AngularFireStorage,
     private route: ActivatedRoute,
   ) {
-
-    //What is happening here?
-
+    //What is happening here? Because the support programs broadly follow the same structure, at least in there locations
+    //we are passing a query string into the URL, which, in turn is then used to form the location in the database where we are
+    //looking for our data. Once we have listened for snapshotChanges() on this location, we then turn the dataset into a SupportItem array.
+    //But, that is not all, we also tap the output (tap, just looking into the item but does not mod it) to check if we have any failures or what not
+    //so we can show a helpful message to the user in the 
     this.supportRequests$ = this.route.queryParams.pipe(map(parameters => {
       this.programName = parameters.productName;
       return db.list(`SUPPORT/vendor/oceansignal/programs/${this.programName}/requests/`).snapshotChanges().pipe(
@@ -38,13 +51,21 @@ export class SupportComponent {
           this.hasSubmitted = false;
           this.hasAuthorised = false;
           this.hasCompleted = false;
+
           for (const item of SupportItems) {
+            //Do we have any passes in the whole dataset?
+            if (!this.hasFailures(item)) {
+              this.hasPassed = true;
+            }
+            //Do we have any submitted states?
             if (item.status.state == null) {
               this.hasSubmitted = true;
             }
+            //Do we have any authorised states?
             else if (item.status.state == 'authorised') {
               this.hasAuthorised = true;
             }
+            //Do we have any shipped states?
             else if (item.status.state == 'shipped') {
               this.hasCompleted = true;
             }
@@ -54,6 +75,30 @@ export class SupportComponent {
     })
     ).pipe(flatMap(listObservable => listObservable));
 
+    this.stats$ = db.list('SUPPORT/vendor/oceansignal/programs/metadata/e100/statistics').snapshotChanges().pipe(
+      map(changes =>{
+        console.log("jimbob");
+       let temp = changes.map(c => ({
+          name: c.payload.key,
+          value: c.payload.val(),
+        }))
+        console.log(temp);
+       return temp;
+      })
+    );
+
+  }
+
+  onSelect(data): void {
+    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+  }
+
+  onActivate(data): void {
+    console.log('Activate', JSON.parse(JSON.stringify(data)));
+  }
+
+  onDeactivate(data): void {
+    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
   }
 
   stopLoading() {
@@ -100,9 +145,16 @@ export class SupportComponent {
   }
 
   hasFailed(product: ProductInfo) {
-      if (product.result == "fail") {
-        return true;
-      }
+    if (product.result == "fail") {
+      return true;
+    }
+    return false;
+  }
+
+  hasFailedSubmission(supportRequest: SupportItem) {
+    if (supportRequest.status.submissionState != "success") {
+      return true;
+    }
     return false;
   }
 

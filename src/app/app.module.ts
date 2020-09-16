@@ -19,6 +19,7 @@ import { NbFirebaseAuthModule, NbFirebasePasswordStrategy } from '@nebular/fireb
 import { environment } from '../environments/environment';
 import { AuthGuard } from './auth-guard.service';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,11 +37,11 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     NbFirebaseAuthModule,
     NbMenuModule.forRoot(),
     NbDatepickerModule.forRoot(),
+    NgxChartsModule,
     NbDialogModule.forRoot(),
     NbWindowModule.forRoot(),
     NbToastrModule.forRoot(),
     CoreModule.forRoot(),
-    
   ],
   bootstrap: [AppComponent],
   providers: [
