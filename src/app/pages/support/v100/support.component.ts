@@ -49,6 +49,7 @@ export class SupportComponent {
               this.hasCompleted = true;
             }
           }
+          this.stopLoading();
         })
       );
     })

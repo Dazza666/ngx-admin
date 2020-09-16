@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
-
+import { NbAuthModule } from '@nebular/auth';
 import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
@@ -20,6 +20,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   user: any;
 
   themes = [
+    {
+      value: 'oceanSignal',
+      name: 'oceanSignal',
+    },
     {
       value: 'default',
       name: 'Light',
@@ -48,7 +52,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [ { title: 'Log out' } ];
+  userMenu = [ { title: 'Log out', link: 'auth/logout' } ];
 
   public constructor(
     private sidebarService: NbSidebarService,
