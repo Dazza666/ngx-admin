@@ -1,5 +1,13 @@
 <nb-card>
   <nb-card-header>
+    <button nbButton status="info"
+    (click)='domagic()'>Do Magic</button>
+  </nb-card-header>
+</nb-card>
+
+
+<nb-card>
+  <nb-card-header>
     MMSI Release Requests
   </nb-card-header>
   <nb-card-body [nbSpinner]="tableDataLoading" nbSpinnerSize="giant" nbSpinnerStatus="warning">

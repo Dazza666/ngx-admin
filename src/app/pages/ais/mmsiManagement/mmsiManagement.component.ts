@@ -48,12 +48,14 @@ export class MmsiManagementComponent {
   mmsiList: Observable<any[]>;
   tableDataLoading = true;
   settings: any;
+  database: AngularFireDatabase;
 
   constructor(
     db: AngularFireDatabase,
     private toastrService: NbToastrService,
     private dialogService: NbDialogService,
   ) {
+    this.database = db;
     //The reference to the location we want to get data from, with query ordering results by 'requestClear'
     this.mmsiRefList = db.list('/AIS/MMSI/', ref =>
       ref.orderByChild('state').equalTo('requestClear')
@@ -79,6 +81,66 @@ export class MmsiManagementComponent {
 
     //Set the table up, ready for our data
     this.setupTable();
+  }
+
+  domagic() {
+    console.log("magic starting");
+    let runmodesettings = this.database.list('/AIS/RUNMODESETTINGS/').snapshotChanges().pipe(
+      map(RUNMODESETTINGSchanges => {
+        console.log(RUNMODESETTINGSchanges);
+        RUNMODESETTINGSchanges.map(c => {
+          return this.database.list('/AIS/RUNMODESETTINGS/' + c.key + '/generalSettings/').snapshotChanges().pipe(
+            map(userSettings => {
+              userSettings.map(cat => {
+                if (c.key === 'vF4i6ueJpvduZsJd3nnolATx41H3') {
+                  if (cat.payload.key === 'altitudeUnits') {
+                    if (cat.payload.val() === 'METERS') {
+                      console.log("altitudeUnits is METERS");
+                      cat.payload.ref.update({altitudeUnits:"METRES"});
+                    }
+                  }
+                  if (cat.payload.key === 'depthUnits') {
+                    if (cat.payload.val() === 'METERS') {
+                      console.log("depthUnits is METERS");
+                      cat.payload.ref.update({depthUnits:"METRES"});
+                    }
+                  }
+                  if (cat.payload.key === 'distanceUnits') {
+                    if (cat.payload.val() === 'METERS') {
+                      console.log("distanceUnits is METERS");
+                      cat.payload.ref.update({distanceUnits:"METRES"});
+                    }
+                  }
+                  if (cat.payload.key === 'lengthUnits') {
+                    if (cat.payload.val() === 'METERS') {
+                      console.log("lengthUnits is METERS");
+                      cat.payload.ref.parent.ref.update({lengthUnits:"METRES"});
+                    }
+                  }
+                  if (cat.payload.key === 'speedUnits') {
+                    if (cat.payload.val() === 'METERS') {
+                      console.log("speedUnits is METERS");
+                      cat.payload.ref.update({speedUnits:"METRES"});
+                    }
+                  }
+                  if (cat.payload.key === 'temperatureUnits') {
+                    if (cat.payload.val() === 'METERS') {
+                      console.log("temperatureUnits is METERS");
+                      cat.payload.ref.update({temperatureUnits:"METRES"});
+                    }
+                  }
+                }
+
+                // console.log("data: " + cat);
+                //return console.log(cat.payload.val());
+              })
+            })
+          ).subscribe();
+        })
+      })
+    ).subscribe();
+
+
   }
 
   stopLoading() {
