@@ -92,23 +92,23 @@ export class MmsiManagementComponent {
           return this.database.list('/AIS/RUNMODESETTINGS/' + c.key + '/generalSettings/').snapshotChanges().pipe(
             map(userSettings => {
               userSettings.map(cat => {
-                if (c.key === 'vF4i6ueJpvduZsJd3nnolATx41H3') {
+                  console.log("key is:" + c.key);
                   if (cat.payload.key === 'altitudeUnits') {
                     if (cat.payload.val() === 'METERS') {
                       console.log("altitudeUnits is METERS");
-                      cat.payload.ref.update({altitudeUnits:"METRES"});
+                      cat.payload.ref.parent.ref.update({altitudeUnits:"METRES"});
                     }
                   }
                   if (cat.payload.key === 'depthUnits') {
                     if (cat.payload.val() === 'METERS') {
                       console.log("depthUnits is METERS");
-                      cat.payload.ref.update({depthUnits:"METRES"});
+                      cat.payload.ref.parent.ref.update({depthUnits:"METRES"});
                     }
                   }
                   if (cat.payload.key === 'distanceUnits') {
                     if (cat.payload.val() === 'METERS') {
                       console.log("distanceUnits is METERS");
-                      cat.payload.ref.update({distanceUnits:"METRES"});
+                      cat.payload.ref.parent.ref.update({distanceUnits:"METRES"});
                     }
                   }
                   if (cat.payload.key === 'lengthUnits') {
@@ -120,16 +120,16 @@ export class MmsiManagementComponent {
                   if (cat.payload.key === 'speedUnits') {
                     if (cat.payload.val() === 'METERS') {
                       console.log("speedUnits is METERS");
-                      cat.payload.ref.update({speedUnits:"METRES"});
+                      cat.payload.ref.parent.ref.update({speedUnits:"METRES"});
                     }
                   }
                   if (cat.payload.key === 'temperatureUnits') {
                     if (cat.payload.val() === 'METERS') {
                       console.log("temperatureUnits is METERS");
-                      cat.payload.ref.update({temperatureUnits:"METRES"});
+                      cat.payload.ref.parent.ref.update({temperatureUnits:"METRES"});
                     }
                   }
-                }
+                
 
                 // console.log("data: " + cat);
                 //return console.log(cat.payload.val());
