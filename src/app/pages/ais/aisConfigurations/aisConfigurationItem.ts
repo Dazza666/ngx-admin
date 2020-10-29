@@ -26,7 +26,6 @@ export class AisConfigurationItem {
   }
 
   static fromJson({ mManufacturerID, mModelNumber, mProductName, mSerialNumber, encodedConfig, mMetaData, mAISDeviceDataStructure }): AisConfigurationItem {
-
     //debugger;
     return new AisConfigurationItem(
       mManufacturerID,
@@ -34,8 +33,8 @@ export class AisConfigurationItem {
       mProductName,
       mSerialNumber,
       encodedConfig,  
-      mMetaData,    
-      mAISDeviceDataStructure,
+      MetaData.fromJson(mMetaData),    
+      AisConfigurationStructure.fromJson(mAISDeviceDataStructure),
     );
   }
 
