@@ -30,7 +30,7 @@
     <div *ngIf="userConfigs$ | async; let filteredAllUserConfigs;">
       <ng-container *ngFor="let thisUsersConfigs of filteredAllUserConfigs; let userConfigIndex = index;">
         <div *ngIf="userIndex == userConfigIndex">
-          <h3>{{ userid.payload.val().EMAIL || "(No email)"}} ({{ userid.key }})</h3>
+          <h5>{{ userid.payload.val().EMAIL || "(No email)"}} ({{ userid.key }})</h5>
           <div *ngIf="(thisUsersConfigs | async)?.length === 0">No configurations found</div>
           <div *ngFor="let config of thisUsersConfigs | async; last as isLast;">
             <nb-accordion>
