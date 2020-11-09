@@ -13,10 +13,10 @@
           </div>
         </ng-template>
         <ng-template #submittedTable>
-          <table class="supportTable">
+          <table class="supportTable w-auto">
             <thead>
               <tr class="text-center">
-                <th class="id">ID</th>
+                <th class="id d-none d-xl-table-cell">ID</th>
                 <th class="details">Details</th>
                 <th class="action">Action</th>
               </tr>
@@ -24,7 +24,7 @@
             <tbody>
               <ng-container *ngFor="let supportRequest of supportRequests;">
                 <tr *ngIf="supportRequest.status.state == null && hasFailures(supportRequest) && !hasFailedSubmission(supportRequest)">
-                  <th scope="row">{{supportRequest.getId()}}</th>
+                  <th scope="row" class="d-none d-xl-table-cell">{{supportRequest.getId()}}</th>
                   <td class="text-center">
                     <!-- the inner table, which shows the product info like serial etc -->
                     <br>
@@ -106,10 +106,10 @@
         </ng-template>
         <ng-template #authorisedTable>
           <!-- holds the authorised requests -->
-          <table class="supportTable">
+          <table class="supportTable w-auto">
             <thead>
               <tr class="text-center">
-                <th class="id">ID</th>
+                <th class="id d-none d-xl-table-cell">ID</th>
                 <th class="details">Details</th>
                 <th class="action">Action</th>
               </tr>
@@ -117,7 +117,7 @@
             <tbody>
               <ng-container *ngFor="let supportRequest of supportRequests;">
                 <tr *ngIf="supportRequest.status.state == 'authorised'">
-                  <th scope="row">{{supportRequest.getId()}}</th>
+                  <th scope="row" class="d-none d-xl-table-cell">{{supportRequest.getId()}}</th>
                   <td class="text-center">
                     <!-- the inner table, which shows the product info like serial etc -->
                     <br>
@@ -192,10 +192,10 @@
         </ng-template>
         <ng-template #completedTable>
           <!-- holds the completed requests -->
-          <table class="supportTable">
+          <table class="supportTable w-auto">
             <thead>
               <tr class="text-center">
-                <th class="id">ID</th>
+                <th class="id d-none d-xl-table-cell">ID</th>
                 <th class="details">Details</th>
                 <th class="action">Action</th>
               </tr>
@@ -203,7 +203,7 @@
             <tbody>
               <ng-container *ngFor="let supportRequest of supportRequests;">
                 <tr *ngIf="supportRequest.status.state == 'shipped'">
-                  <th scope="row">{{supportRequest.getId()}}</th>
+                  <th scope="row" class="d-none d-xl-table-cell">{{supportRequest.getId()}}</th>
                   <td class="text-center">
                     <!-- the inner table, which shows the product info like serial etc -->
                     <table class="supportTable" width="50%">
@@ -260,10 +260,10 @@
         </ng-template>
         <ng-template #passedTable>
           <!-- holds the entries that only have passed requests -->
-          <table class="supportTable">
+          <table class="supportTable w-auto">
             <thead>
               <tr class="text-center">
-                <th class="id">ID</th>
+                <th class="id d-none d-xl-table-cell">ID</th>
                 <th class="details">Details</th>
                 <th class="action">Action</th>
               </tr>
@@ -271,7 +271,7 @@
             <tbody>
               <ng-container *ngFor="let supportRequest of supportRequests;">
                 <tr *ngIf="!hasFailures(supportRequest)">
-                  <th scope="row">{{supportRequest.getId()}}</th>
+                  <th scope="row" class="d-none d-xl-table-cell">{{supportRequest.getId()}}</th>
                   <td class="text-center">
                     <!-- the inner table, which shows the product info like serial etc -->
                     <br>
