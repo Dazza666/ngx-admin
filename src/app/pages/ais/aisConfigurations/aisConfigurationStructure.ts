@@ -1,7 +1,7 @@
 import { PgnRouting } from './pgnRouting';
 import { N2k } from './n2k';
 import { WiFi } from './wifi';
-import { Port } from './Port';
+import { Port } from './port';
 
 export class AisConfigurationStructure {
 
