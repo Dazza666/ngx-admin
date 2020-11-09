@@ -81,31 +81,31 @@
                           Vessel Name: {{ config.mAISDeviceDataStructure.mVesselName || "-" }}
                         </li>
                         <li>
-                          Callsign: {{ config.mAISDeviceDataStructure.mCallsign || "-" }}
+                          Callsign: {{ config.mAISDeviceDataStructure.mCallSign || "-" }}
                         </li>
                         <li>
-                          Long Range Mode: {{ config.mAISDeviceDataStructure.mLongRangeModeEnabled || "-" }}
+                          Vessel Type: {{ config.mAISDeviceDataStructure.mVesselType || "-" }}
                         </li>
                         <li>
                           External Silent Mode: {{ config.mAISDeviceDataStructure.mExternalSilentModeEnabled || "-" }}
                         </li>
                         <li>
-                          Port 1 baud: {{ config.mAISDeviceDataStructure.mPort1BaudRateSetting || "-" }}
+                          Long Range Mode: {{ config.mAISDeviceDataStructure.mLongRangeModeEnabled || "-" }}
                         </li>
                         <li>
-                          Port 1 sentence Output: {{ config.mAISDeviceDataStructure.mPort1SentenceSetting || "-" }}
+                          Port 1 baud: {{ config.mAISDeviceDataStructure.port1Helper.getBaud() || "-" }}
                         </li>
                         <li>
-                          Port 2 baud: {{ config.mAISDeviceDataStructure.mPort2BaudRateSetting || "-" }}
+                          Port 1 sentence Output: {{ config.mAISDeviceDataStructure.port1Helper.getOutputMode() || "-" }}
                         </li>
                         <li>
-                          Port 2 sentence Output: {{ config.mAISDeviceDataStructure.mPort2SentenceSetting || "-" }}
+                          Port 2 baud: {{ config.mAISDeviceDataStructure.port2Helper.getBaud() || "-" }}
+                        </li>
+                        <li>
+                          Port 2 sentence Output: {{ config.mAISDeviceDataStructure.port2Helper.getOutputMode() || "-" }}
                         </li>
                         <li>
                           Silent Mode: {{ config.mAISDeviceDataStructure.mSilentModeEnabled || "-" }}
-                        </li>
-                        <li>
-                          Vessel Type: {{ config.mAISDeviceDataStructure.mVesselType || "-" }}
                         </li>
                       </ul>
                     </nb-tab>
@@ -140,13 +140,16 @@
                     <nb-tab tabTitle="WiFi Settings">
                       <ul>
                         <li>
-                          WiFi PassPhrase (INF): {{ config.mAISDeviceDataStructure.mWiFiPassPhrase || "-" }}
+                          WiFi Mode: {{ config.mAISDeviceDataStructure.wifiHelper.getMode() || "-" }}
                         </li>
                         <li>
                           WiFi SSID: {{ config.mAISDeviceDataStructure.mWiFiSSID || "-" }}
                         </li>
                         <li>
-                          Generated WiFi Password (AP): {{ config.mMetaData.mGeneratedWifiPassword }}
+                          WiFi PassPhrase (Network): {{ config.mAISDeviceDataStructure.mWiFiPassPhrase || "-" }}
+                        </li>
+                        <li>
+                          Generated WiFi Password (Direct): {{ config.mMetaData.mGeneratedWifiPassword }}
                         </li>
                       </ul>
                     </nb-tab>
