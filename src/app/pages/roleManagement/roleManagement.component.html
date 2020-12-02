@@ -1,0 +1,31 @@
+<h1>User Roles</h1>
+
+<nb-card>
+  <nb-card-header>Use the tabs below to manage users; you can add & disable users, as well as change their role status
+  </nb-card-header>
+  <nb-card-body>
+    <nb-tabset>
+      <nb-tab tabTitle="Add Users" tabIcon="person-add-outline" responsive>
+        <h6>To create a new user please enter the email address of the user you want to create, a password will be
+          automatically generated but you can change it if you want. Finally, select the role the user is to have within
+          the system (Roles can be managed after creation)</h6>
+        <nb-form-field>
+          <nb-icon nbPrefix icon="person-add-outline" pack="eva"></nb-icon>
+          <input [(ngModel)]="createEmail" name="createEmail" type="text" (keyup)="onKeyUpEventAddEmail($event)" nbInput
+            placeholder="Email" nbTooltip="Please add the email address of the user you want to create an account for"
+            nbTooltipStatus="secondary">
+        </nb-form-field>
+        <br>
+        <nb-form-field>
+          <nb-icon nbPrefix icon="shield-outline" pack="eva"></nb-icon>
+          <input [(ngModel)]="createPassword" name="createPassword" type="text"
+            (keyup)="onKeyUpEventCreatePassword($event)" nbInput placeholder="Password"
+            nbTooltip="Please enter a password of at least 6 characters" nbTooltipStatus="secondary">
+
+        </nb-form-field>
+      </nb-tab>
+      <nb-tab tabTitle="Manage Existing User Roles" tabIcon="clipboard-outline" responsive>
+      </nb-tab>
+    </nb-tabset>
+  </nb-card-body>
+</nb-card>

@@ -13,8 +13,13 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'User Management',
-    icon: 'people-outline',
+    icon: 'person-outline',
     link: '/pages/user',
+  },
+  {
+    title: 'User Roles',
+    icon: 'people-outline',
+    link: '/pages/userRoles',
   },
   {
     title: 'AIS',

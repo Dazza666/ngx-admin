@@ -6,6 +6,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { FirmwareModule } from './firmware/firmware.module';
 import { UserManagementModule } from './userManagement/userManagement.module';
+import { RoleManagementModule } from './roleManagement/roleManagement.module';
 import { MmsiManagementModule } from './ais/mmsiManagement/mmsiManagement.module';
 import { AisConfigsModule } from './ais/aisConfigs/aisConfigs.module';
 import { SupportModule } from './support/v100/support.module';
@@ -21,6 +22,7 @@ import { SupportModule } from './support/v100/support.module';
     MmsiManagementModule,
     AisConfigsModule,
     SupportModule,
+    RoleManagementModule,
   ],
   declarations: [
     PagesComponent,

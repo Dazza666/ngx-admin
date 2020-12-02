@@ -4,6 +4,7 @@ import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FirmwareComponent } from './firmware/firmware.component';
 import { UserManagementComponent } from './userManagement/userManagement.component';
+import { RoleManagementComponent } from './roleManagement/roleManagement.component';
 import { MmsiManagementComponent } from './ais/mmsiManagement/mmsiManagement.component';
 import { AisConfigsComponent } from './ais/aisConfigs/aisConfigs.component';
 import { SupportComponent } from './support/v100/support.component';
@@ -24,6 +25,10 @@ const routes: Routes = [{
     {
       path: 'user',
       component: UserManagementComponent,
+    },
+    {
+      path: 'userRoles',
+      component: RoleManagementComponent,
     },
     {
       path: 'ais/mmsi',
