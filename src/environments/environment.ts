@@ -16,5 +16,6 @@ export const environment = {
     authDomain: 'oceansignalsdk.firebaseapp.com',
     databaseURL: 'https://oceansignalsdk.firebaseio.com',
     storageBucket: 'gs://oceansignalsdk.appspot.com/',
-  }
+  },
+  useEmulators: true,
 };

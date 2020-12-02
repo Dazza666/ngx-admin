@@ -12,4 +12,5 @@ export const environment = {
     databaseURL: 'https://oceansignalsdk.firebaseio.com',
     storageBucket: 'gs://oceansignalsdk.appspot.com/',
   },
+  useEmulators: false,
 };

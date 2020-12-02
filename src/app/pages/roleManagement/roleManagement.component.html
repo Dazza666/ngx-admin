@@ -6,9 +6,6 @@
   <nb-card-body>
     <nb-tabset>
       <nb-tab tabTitle="Add Users" tabIcon="person-add-outline" responsive>
-        <h6>To create a new user please enter the email address of the user you want to create, a password will be
-          automatically generated but you can change it if you want. Finally, select the role the user is to have within
-          the system (Roles can be managed after creation)</h6>
         <nb-form-field>
           <nb-icon nbPrefix icon="person-add-outline" pack="eva"></nb-icon>
           <input [(ngModel)]="createEmail" name="createEmail" type="text" (keyup)="onKeyUpEventAddEmail($event)" nbInput
@@ -21,8 +18,72 @@
           <input [(ngModel)]="createPassword" name="createPassword" type="text"
             (keyup)="onKeyUpEventCreatePassword($event)" nbInput placeholder="Password"
             nbTooltip="Please enter a password of at least 6 characters" nbTooltipStatus="secondary">
-
         </nb-form-field>
+        <br>
+        <button nbButton status="success" (click)="createUser()">Create User</button>
+
+        <form class="text-center" (ngSubmit)="registerProduct()" #form="ngForm" aria-labelledby="title">
+
+          <ng-container>
+            <h6>To create a new user please enter the email address of the user you want to create, a password will be
+              automatically generated but you can change it if you want. Finally, select the role the user is to have within
+              the system (Roles can be managed after creation)</h6>
+            <br>
+<!-- 
+            <div class="form-control-group">
+              <nb-select placeholder="Select Your Product" id="product" name="product"
+                [(ngModel)]="productRegistration.product" #product="ngModel" [required]=true
+                [status]="product.dirty ? (product.invalid ? 'danger' : 'success') : 'basic'"
+                [attr.aria-invalid]="product.invalid && product.touched ? true : null">
+                <nb-option *ngFor="let product of theProductDetails" [value]=product>{{product.name}}
+                </nb-option>
+              </nb-select>
+              <ng-container *ngIf="product.invalid && product.touched">
+                <p class="caption status-danger" *ngIf="product.errors?.required">
+                  Product is required!
+                </p>
+              </ng-container>
+            </div> -->
+
+            <br>
+            Email
+            <br>
+            <div class="form-control-group">
+              
+              <input nbInput [(ngModel)]="productRegistration.email" #email="ngModel" id="input-name" name="email"
+                placeholder="Enter Email" autofocus fieldSize="medium"
+                [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : 'basic'" [required]=true
+                [attr.aria-invalid]="email.invalid && email.touched ? true : null" [pattern]=emailPattern>
+              <ng-container *ngIf="email.invalid && email.touched">
+                <p class="caption status-danger" *ngIf="email.errors?.required">
+                  email is invalid, please enter a email address
+                </p>
+                <p class="caption status-danger" *ngIf="email.errors?.pattern">
+                  email is invalid, please enter a email address
+                </p>
+              </ng-container>
+            </div>
+            <br>
+            <br>
+            <button nbButton fullWidth status="primary" size="large" [disabled]="submitted || !form.valid"
+              [class.btn-pulse]="submitted">
+              Register {{productRegistration.email}}
+            </button>
+
+
+          </ng-container>
+
+          <ng-template #loading>
+            <nb-card [nbSpinner]="true" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+              <nb-card-body>
+                Please wait while we get things ready
+              </nb-card-body>
+            </nb-card>
+          </ng-template>
+        </form>
+
+
+
       </nb-tab>
       <nb-tab tabTitle="Manage Existing User Roles" tabIcon="clipboard-outline" responsive>
       </nb-tab>

@@ -20,6 +20,10 @@ import { environment } from '../environments/environment';
 import { AuthGuard } from './auth-guard.service';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { URL as DATABASE_URL } from '@angular/fire/database';
+import { ORIGIN as FUNCTIONS_ORIGIN } from '@angular/fire/functions';
+import { SETTINGS as FIRESTORE_SETTINGS } from '@angular/fire/firestore';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -46,7 +50,17 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
   bootstrap: [AppComponent],
   providers: [
     // ...
-    AuthGuard
+    AuthGuard,
+    {
+      provide: DATABASE_URL,
+      useValue: environment.useEmulators ? `http://localhost:9000?ns=${environment.firebase.projectId}` : undefined
+    },
+    { provide: FIRESTORE_SETTINGS, useValue: environment.useEmulators ? { host: 'localhost:8080', ssl: false } : {} },
+    { provide: FUNCTIONS_ORIGIN, useValue: environment.useEmulators ? 'http://localhost:5001' : undefined },
+    // { provide: USE_AUTH_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9099] : undefined },
+    // { provide: USE_DATABASE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9100] : undefined },
+    // { provide: USE_FIRESTORE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 8080] : undefined },
+    // { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.useEmulators ? ['localhost', 5001] : undefined },
   ]
 
 })
