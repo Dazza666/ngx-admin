@@ -57,17 +57,15 @@
             </div>
 
             <br>
-            <h6>User Role</h6>
+            <h6>Users Role</h6>
             <br>
 
-            <div style="text-align: center;">
-              <span style="text-align: left; display: inline-block; border: 1px solid grey; padding: 0.5em;">
-                <nb-radio-group id="role" name="role" [(ngModel)]="userRegistration.role" #role="ngModel">
-                  <nb-radio class="radio-inline" *ngFor="let role of roles" [value]=role>{{role}}
-                  </nb-radio>
-                </nb-radio-group>
-              </span>
-            </div>
+             <div class="form-control-group">
+              <nb-radio-group id="role" name="role" [(ngModel)]="userRegistration.role" #role="ngModel">
+                <nb-radio class="inline-radio" *ngFor="let role of roles" [value]=role>{{role}}
+                </nb-radio>
+              </nb-radio-group>
+             </div>
 
             <br>
 

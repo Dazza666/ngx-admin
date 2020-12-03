@@ -7,6 +7,7 @@ import { ShowcaseDialogComponent } from '../../components/showcase-dialog.compon
 @Component({
   selector: 'ngx-dashboard',
   templateUrl: './roleManagement.component.html',
+  styleUrls: ['./roleManagement.component.scss'],
 })
 export class RoleManagementComponent {
 
