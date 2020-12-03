@@ -6,51 +6,19 @@
   <nb-card-body>
     <nb-tabset>
       <nb-tab tabTitle="Add Users" tabIcon="person-add-outline" responsive>
-        <nb-form-field>
-          <nb-icon nbPrefix icon="person-add-outline" pack="eva"></nb-icon>
-          <input [(ngModel)]="createEmail" name="createEmail" type="text" (keyup)="onKeyUpEventAddEmail($event)" nbInput
-            placeholder="Email" nbTooltip="Please add the email address of the user you want to create an account for"
-            nbTooltipStatus="secondary">
-        </nb-form-field>
-        <br>
-        <nb-form-field>
-          <nb-icon nbPrefix icon="shield-outline" pack="eva"></nb-icon>
-          <input [(ngModel)]="createPassword" name="createPassword" type="text"
-            (keyup)="onKeyUpEventCreatePassword($event)" nbInput placeholder="Password"
-            nbTooltip="Please enter a password of at least 6 characters" nbTooltipStatus="secondary">
-        </nb-form-field>
-        <br>
-        <button nbButton status="success" (click)="createUser()">Create User</button>
-
-        <form class="text-center" (ngSubmit)="registerProduct()" #form="ngForm" aria-labelledby="title">
+        <form class="text-center" (ngSubmit)="createUser()" #form="ngForm" aria-labelledby="title">
 
           <ng-container>
             <h6>To create a new user please enter the email address of the user you want to create, a password will be
-              automatically generated but you can change it if you want. Finally, select the role the user is to have within
-              the system (Roles can be managed after creation)</h6>
-            <br>
-<!-- 
-            <div class="form-control-group">
-              <nb-select placeholder="Select Your Product" id="product" name="product"
-                [(ngModel)]="productRegistration.product" #product="ngModel" [required]=true
-                [status]="product.dirty ? (product.invalid ? 'danger' : 'success') : 'basic'"
-                [attr.aria-invalid]="product.invalid && product.touched ? true : null">
-                <nb-option *ngFor="let product of theProductDetails" [value]=product>{{product.name}}
-                </nb-option>
-              </nb-select>
-              <ng-container *ngIf="product.invalid && product.touched">
-                <p class="caption status-danger" *ngIf="product.errors?.required">
-                  Product is required!
-                </p>
-              </ng-container>
-            </div> -->
+              automatically generated (but you can change it if you want). Finally, select the role the user is to have
+              within
+              the system (roles can be managed after creation)</h6>
 
             <br>
-            Email
+            <h6>Users Email</h6>
             <br>
             <div class="form-control-group">
-              
-              <input nbInput [(ngModel)]="productRegistration.email" #email="ngModel" id="input-name" name="email"
+              <input nbInput [(ngModel)]="userRegistration.email" #email="ngModel" id="input-name" name="email"
                 placeholder="Enter Email" autofocus fieldSize="medium"
                 [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : 'basic'" [required]=true
                 [attr.aria-invalid]="email.invalid && email.touched ? true : null" [pattern]=emailPattern>
@@ -63,13 +31,50 @@
                 </p>
               </ng-container>
             </div>
+
             <br>
+            <h6>Users Password</h6>
+
             <br>
+
+            <div class="input-group mb-3 justify-content-center">
+              <input nbInput [(ngModel)]="userRegistration.password" #password="ngModel" id="input-name" name="password"
+                placeholder="Enter password" autofocus fieldSize="medium" (focus)="generatePassword()"
+                [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'" [required]=true
+                [attr.aria-invalid]="password.invalid && password.touched ? true : null" minlength="8" maxlength="20">
+              <ng-container *ngIf="password.invalid && password.touched">
+                <p class="caption status-danger" *ngIf="password.errors?.required">
+                  password is invalid, please enter a password address
+                </p>
+              </ng-container>
+              &nbsp;&nbsp;
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" nbButton type="button" status="info" size="large"
+                  (click)="generatePassword()">
+                  Generate New
+                </button>
+              </div>
+            </div>
+
+            <br>
+            <h6>User Role</h6>
+            <br>
+
+            <div style="text-align: center;">
+              <span style="text-align: left; display: inline-block; border: 1px solid grey; padding: 0.5em;">
+                <nb-radio-group id="role" name="role" [(ngModel)]="userRegistration.role" #role="ngModel">
+                  <nb-radio class="radio-inline" *ngFor="let role of roles" [value]=role>{{role}}
+                  </nb-radio>
+                </nb-radio-group>
+              </span>
+            </div>
+
+            <br>
+
             <button nbButton fullWidth status="primary" size="large" [disabled]="submitted || !form.valid"
               [class.btn-pulse]="submitted">
-              Register {{productRegistration.email}}
+              Register {{userRegistration.email}}
             </button>
-
 
           </ng-container>
 
@@ -81,7 +86,6 @@
             </nb-card>
           </ng-template>
         </form>
-
 
 
       </nb-tab>

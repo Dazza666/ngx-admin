@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NbButtonModule, NbCardModule, NbTabsetModule, NbSpinnerModule, NbSearchModule, NbInputModule, NbFormFieldModule, NbIconModule, NbAccordionModule, NbTooltipModule} from '@nebular/theme';
+import { NbRadioModule, NbButtonModule, NbCardModule, NbTabsetModule, NbSpinnerModule, NbSearchModule, NbInputModule, NbFormFieldModule, NbIconModule, NbAccordionModule, NbTooltipModule} from '@nebular/theme';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ThemeModule } from '../../@theme/theme.module';
 import { RoleManagementComponent } from './roleManagement.component';
@@ -20,6 +20,7 @@ import { FormsModule as ngFormsModule } from '@angular/forms';
     NbAccordionModule,
     NbTooltipModule,
     NbButtonModule,
+    NbRadioModule,
   ],
   declarations: [
     RoleManagementComponent,

@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { catchError, share, take } from 'rxjs/operators';
-import { NbAuthService, NbAuthToken } from '@nebular/auth';
+import { Observable } from 'rxjs';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { map, flatMap } from 'rxjs/operators';
+import { NbToastrService, NbComponentStatus, NbDialogService } from '@nebular/theme';
+import { ShowcaseDialogComponent } from '../../components/showcase-dialog.component';
 
 @Component({
   selector: 'ngx-dashboard',
@@ -12,43 +10,92 @@ import { map, flatMap } from 'rxjs/operators';
 })
 export class RoleManagementComponent {
 
-  createEmail: string;
-  createPassword: string;
   angularFireFunctions: AngularFireFunctions;
   data$: Observable<any>;
-  productRegistration: any;
+  //The object that will hold the user registration information
+  userRegistration: any;
+  //not a comphrensive, but good enough email reg ex
   emailPattern = "^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
-  constructor(private fns: AngularFireFunctions) {
+  //Is the form submitted?
+  submitted: boolean;
+  //Dictionary for our password generation
+  dictionary = "ABCDEFGHIJKLMNOPWRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@?&="
+  //The array version of our dictionary
+  dictionaryArray = [];
+  //The length of the generated password
+  passwordLength = 8;
+  //The roles object that will contain the user role options
+  roles: string[];
+  constructor(private fns: AngularFireFunctions, private toastrService: NbToastrService, private dialogService: NbDialogService) {
     this.angularFireFunctions = fns;
-    this.productRegistration = {};
-    this.productRegistration.email = "";
+    this.userRegistration = {};
+    this.submitted = false;
+    this.dictionaryArray = [].concat(this.dictionary.split(""));
+    //Assign the roles that are available as selections
+    this.roles = ['Customer', 'Dealer', 'Admin',];
+    //Set our default role
+    this.userRegistration.role = this.roles[0];
   }
 
-  onKeyUpEventAddEmail(event: any) {
-    this.createEmail = event.target.value;
+  generatePassword() {
+    // Generate random password from array
+    var newPassword = "";
+    for (var i = 0; i < this.passwordLength; i++) {
+      newPassword += this.dictionaryArray[Math.floor(Math.random() * this.dictionary.length)];
+    }
+    this.userRegistration.password = newPassword;
   }
 
-  onKeyUpEventCreatePassword(event: any) {
-    this.createPassword = event.target.value;
+  showToast(status: NbComponentStatus, email:String) {
+    this.toastrService.show(
+      `Account ${email} created`,
+      'Account Created!',
+      { status });
+  }
+
+  showFailure(message, dialogService): void {
+    dialogService.open(ShowcaseDialogComponent, {
+      context: {
+        title: 'Registration Failure!',
+        content: message,
+      },
+    });
   }
 
   createUser() {
+    this.submitted = true;
     //Get a reference to the function
     const callable = this.angularFireFunctions.httpsCallable('createUser');
-    //Lets get the payload ready
-    this.data$ = callable({ email: 'test21@test.com', pass: 'meow', role: 'admin', });
+    //Lets get the payload ready...
+    //pull out and assign the local vars
+    const userEmail = this.userRegistration.email;
+    const userPassword = this.userRegistration.password;
+    const role = this.userRegistration.role;
+    //Create an empty payload object
+    var payload = {}; 
+    //Populate said object with our local vars
+    payload['email'] = userEmail;
+    payload['pass'] = userPassword;
+    //If a role has been selected, and its not a plain old customer - send the role to the server as well
+    if (role != 'customer') {
+      payload['role'] = role;
+    }
 
-    this.data$.toPromise().then(function (responce) {
+    //Load up our callable with the payload (its not sent yet)
+    this.data$ = callable(payload);
+
+    //Fire our payload to the server and see whats returned
+    this.data$.toPromise().then((responce) => {
       console.log('created new user: ' + responce.result);
-    }).catch(function (error) {
+      //Great, we have a user created, reset the form now...
+      this.showToast('success', userEmail);
+      this.submitted = false;
+    }).catch((error) => {
       console.log('Error creating new user: ' + error);
+      this.showFailure(error, this.dialogService);
+      //Something has gone wrong...leave everything as it is but tell the user.
+      this.submitted = false;
     });
-
-    // this.data$.pipe(
-    //   map(userids => {
-    //     console.log("here we go");
-    //     console.log(userids);
-    //   })).subscribe()
   }
 
 }
