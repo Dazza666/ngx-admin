@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ContentChild, ElementRef, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { NbToastrService, NbComponentStatus, NbDialogService } from '@nebular/theme';
@@ -13,6 +13,7 @@ export class RoleManagementComponent {
 
   angularFireFunctions: AngularFireFunctions;
   data$: Observable<any>;
+  user$: Observable<any>;
   //The object that will hold the user registration information
   userRegistration: any;
   //not a comphrensive, but good enough email reg ex
@@ -27,6 +28,12 @@ export class RoleManagementComponent {
   passwordLength = 8;
   //The roles object that will contain the user role options
   roles: string[];
+  userEmailSearch: string;
+  userEditRole: string;
+  loading = false;
+
+  @ViewChild('jeffery', { static: true }) accordion;
+
   constructor(private fns: AngularFireFunctions, private toastrService: NbToastrService, private dialogService: NbDialogService) {
     this.angularFireFunctions = fns;
     this.userRegistration = {};
@@ -47,7 +54,7 @@ export class RoleManagementComponent {
     this.userRegistration.password = newPassword;
   }
 
-  showToast(status: NbComponentStatus, email:String) {
+  showToast(status: NbComponentStatus, email: String) {
     this.toastrService.show(
       `Account ${email} created`,
       'Account Created!',
@@ -73,7 +80,7 @@ export class RoleManagementComponent {
     const userPassword = this.userRegistration.password;
     const role = this.userRegistration.role;
     //Create an empty payload object
-    var payload = {}; 
+    var payload = {};
     //Populate said object with our local vars
     payload['email'] = userEmail;
     payload['pass'] = userPassword;
@@ -97,6 +104,55 @@ export class RoleManagementComponent {
       //Something has gone wrong...leave everything as it is but tell the user.
       this.submitted = false;
     });
+  }
+
+  searchUser() {
+    this.loading = true;
+    //Get a reference to the function
+    const callable = this.angularFireFunctions.httpsCallable('getUser');
+
+    var payload = {};
+    payload['email'] = this.userEmailSearch;
+
+    this.user$ = callable(payload);
+  }
+
+  setAccountDisabled(uid, isDisabled) {
+    this.loading = true;
+    //Get a reference to the function
+    const callable = this.angularFireFunctions.httpsCallable('setAccountDisabled');
+
+    var payload = {};
+    payload['isDisabled'] = isDisabled;
+    payload['uid'] = uid;
+
+    this.user$ = callable(payload);
+  }
+
+  updateUserRole(uid) {
+    this.loading = true;
+    //Get a reference to the function
+    const callable = this.angularFireFunctions.httpsCallable('updateUserRole');
+
+    var payload = {};
+    payload['uid'] = uid;
+    if (this.userEditRole != 'Customer') {
+      payload['role'] = this.userEditRole;
+    }
+
+    this.user$ = callable(payload);
+  }
+
+  setRole(role) {
+    var role;
+    //Theres only one role for now, so looping through everything is fine.
+    Object.keys(role).forEach(function (key) {
+      role = key;
+    });
+
+    //role = {Dealer: true}
+    this.userEditRole = role;
+    return true;
   }
 
 }

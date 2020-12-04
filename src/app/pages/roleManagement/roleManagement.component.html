@@ -18,7 +18,7 @@
             <h6>Users Email</h6>
             <br>
             <div class="form-control-group">
-              <input nbInput [(ngModel)]="userRegistration.email" #email="ngModel" id="input-name" name="email"
+              <input nbInput [(ngModel)]="userRegistration.email" #email="ngModel" id="input-email" name="email"
                 placeholder="Enter Email" autofocus fieldSize="medium"
                 [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : 'basic'" [required]=true
                 [attr.aria-invalid]="email.invalid && email.touched ? true : null" [pattern]=emailPattern>
@@ -38,7 +38,7 @@
             <br>
 
             <div class="input-group mb-3 justify-content-center">
-              <input nbInput [(ngModel)]="userRegistration.password" #password="ngModel" id="input-name" name="password"
+              <input nbInput [(ngModel)]="userRegistration.password" #password="ngModel" id="input-password" name="password"
                 placeholder="Enter password" autofocus fieldSize="medium" (focus)="generatePassword()"
                 [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'" [required]=true
                 [attr.aria-invalid]="password.invalid && password.touched ? true : null" minlength="8" maxlength="20">
@@ -60,12 +60,12 @@
             <h6>Users Role</h6>
             <br>
 
-             <div class="form-control-group">
+            <div class="form-control-group">
               <nb-radio-group id="role" name="role" [(ngModel)]="userRegistration.role" #role="ngModel">
                 <nb-radio class="inline-radio" *ngFor="let role of roles" [value]=role>{{role}}
                 </nb-radio>
               </nb-radio-group>
-             </div>
+            </div>
 
             <br>
 
@@ -87,8 +87,106 @@
 
 
       </nb-tab>
-      <nb-tab tabTitle="Manage Existing User Roles" tabIcon="clipboard-outline" responsive>
+      <nb-tab tabTitle="Manage Existing Users" tabIcon="clipboard-outline" responsive>
+
+        <h6>To search for a user please enter their full email address in the box below. the entire email address must
+          be entered in, e.g.
+          if you you want to search for 'info@oceansignal.com' then entering 'info@' will not return any results.
+        </h6>
+
+        <form class="text-center" (ngSubmit)="searchUser()" (keyup.enter)="searchUser()" #formEditUser="ngForm"
+          aria-labelledby="title">
+
+          <div class="input-group mb-3 justify-content-center">
+            <ng-container>
+              <input nbInput [(ngModel)]="userEmailSearch" #emailSearch="ngModel" id="input-searchUser" name="emailSearch"
+                placeholder="Enter Email" autofocus fieldSize="medium"
+                [status]="emailSearch.dirty ? (emailSearch.invalid  ? 'danger' : 'success') : 'basic'" [required]=true
+                [attr.aria-invalid]="emailSearch.invalid && emailSearch.touched ? true : null" [pattern]=emailPattern>
+              <ng-container *ngIf="emailSearch.invalid && emailSearch.touched">
+                <p class="caption status-danger" *ngIf="emailSearch.errors?.required">
+                  email is invalid, please enter a email address
+                </p>
+                <p class="caption status-danger" *ngIf="email.errors?.pattern">
+                  email is invalid, please enter a email address
+                </p>
+              </ng-container>
+              &nbsp;&nbsp;
+
+              <button nbButton status="primary" size="large" [disabled]="submitted || !formEditUser.valid"
+                [class.btn-pulse]="submitted">
+                Search
+              </button>
+
+            </ng-container>
+          </div>
+
+        </form>
+
+        <!-- <div *ngIf="userId.record.disabled;then showLoading else showContent"></div> -->
+
+        <div *ngIf="user$ | async; then let userId">
+          <nb-accordion>
+            <nb-accordion-item>
+              <nb-accordion-item-header>{{userId.record.email}} ({{userId.record.uid}})</nb-accordion-item-header>
+              <nb-accordion-item-body>
+                <h6>Account Status</h6>
+                <br>
+                <div *ngIf="userId.record.disabled;then showEnable else showDisable"></div>
+                <ng-template #showEnable>
+                   <button nbButton status="primary" size="large" (click)="setAccountDisabled(userId.record.uid, false)">
+                    Enable Account
+                  </button>
+                </ng-template>
+                <ng-template #showDisable> 
+                  <button nbButton status="primary" size="large" (click)="setAccountDisabled(userId.record.uid, true)">
+                    Disable Account
+                  </button>
+                </ng-template>
+                <br>
+                <br>
+                <h6>User Role</h6>
+                <br>
+
+                <!-- {{setRole(userId.record.customClaims)}} -->
+                <!-- <div *ngIf="setRole(userId.record.customClaims)"> -->
+                <div class="input-group mb-3 justify-content-center">
+                  <ng-container>
+                    <div class="form-control-group">
+                      <nb-radio-group id="role" name="role" [(ngModel)]="userEditRole" #role="ngModel">
+                        <nb-radio class="inline-radio" *ngFor="let role of roles" [value]=role>{{role}}
+                        </nb-radio>
+                      </nb-radio-group>
+                    </div>
+
+                    &nbsp;&nbsp;
+      
+                    <button nbButton status="primary" size="large" (click)="updateUserRole(userId.record.uid)">
+                      Update role
+                    </button>
+      
+                  </ng-container>
+                </div>
+              <!-- </div> -->
+
+              </nb-accordion-item-body>
+            </nb-accordion-item>
+          </nb-accordion>
+          <pre>{{userId | json}}</pre>
+        </div>
+
+
+
+
       </nb-tab>
     </nb-tabset>
   </nb-card-body>
 </nb-card>
+
+<ng-template #loadingTest>
+  <nb-card [nbSpinner]="loading" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+    <nb-card-body>
+      Please wait
+    </nb-card-body>
+  </nb-card>
+</ng-template>
