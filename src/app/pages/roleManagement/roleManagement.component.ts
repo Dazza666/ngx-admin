@@ -1,10 +1,12 @@
-import { Component, ContentChild, ElementRef, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { NbToastrService, NbComponentStatus, NbDialogService } from '@nebular/theme';
 import { ShowcaseDialogComponent } from '../../components/showcase-dialog.component';
 import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { NgForm } from '@angular/forms';
+
 
 @Component({
   selector: 'ngx-dashboard',
@@ -38,8 +40,9 @@ export class RoleManagementComponent {
   loading = false;
   //The flag to set when a searched for user has not been found
   noResultsFound: boolean;
-
-  @ViewChild('jeffery', { static: true }) accordion;
+  //The error message for user search
+  errorMessage: any;
+  @ViewChild('formEditUser', { static: false }) editUserForm: NgForm;
 
   constructor(private fns: AngularFireFunctions, private toastrService: NbToastrService, private dialogService: NbDialogService) {
     this.angularFireFunctions = fns;
@@ -87,6 +90,7 @@ export class RoleManagementComponent {
 
   createUser() {
     this.submitted = true;
+    this.setLoading(true);
     //Get a reference to the function
     const callable = this.angularFireFunctions.httpsCallable('createUser');
     //Lets get the payload ready...
@@ -113,15 +117,18 @@ export class RoleManagementComponent {
       //Great, we have a user created, reset the form now...
       this.showToast('success', `Account ${userEmail} created`, 'Account Created!');
       this.submitted = false;
+      this.setLoading(false);
     }).catch((error) => {
       console.log('Error creating new user: ' + error);
       this.showFailure(error, this.dialogService);
       //Something has gone wrong...leave everything as it is but tell the user.
       this.submitted = false;
+      this.setLoading(false);
     });
   }
 
   searchUser() {
+    if (!this.editUserForm.invalid) {
     this.noResultsFound = false;
     this.setLoading(true);
     //Get a reference to the function
@@ -136,9 +143,11 @@ export class RoleManagementComponent {
     })).pipe(catchError(err => {
       this.setLoading(false);
       this.noResultsFound = true;
+      this.errorMessage = err;
       console.log('Handling error locally and rethrowing it...', err);
       return throwError(err);
     }));
+  }
   }
 
   setAccountDisabled(uid, isDisabled) {

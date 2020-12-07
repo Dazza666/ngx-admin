@@ -7,7 +7,7 @@
     <nb-tabset>
       <nb-tab tabTitle="Add Users" tabIcon="person-add-outline" responsive>
         <form class="text-center" (ngSubmit)="createUser()" #form="ngForm" aria-labelledby="title">
-
+          <div *ngIf="!isLoading()">
           <ng-container>
             <h6>To create a new user please enter the email address of the user you want to create, a password will be
               automatically generated (but you can change it if you want). Finally, select the role the user is to have
@@ -73,8 +73,16 @@
               [class.btn-pulse]="submitted">
               Register {{userRegistration.email}}
             </button>
-
+            
           </ng-container>
+        </div>
+          <div *ngIf="isLoading()">
+            <nb-card [nbSpinner]="true" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+              <nb-card-body>
+                Processing
+              </nb-card-body>
+            </nb-card>
+          </div>
         </form>
       </nb-tab>
       <nb-tab tabTitle="Manage Existing Users" tabIcon="clipboard-outline" responsive>
@@ -176,7 +184,7 @@
         </div>
 
         <div *ngIf="noResultsFound">
-          <h6 class="text-warning">No results found for user</h6>
+          <h6 class="text-warning">{{errorMessage}}</h6>
         </div>
 
       </nb-tab>
