@@ -3,6 +3,8 @@ import { Observable } from 'rxjs';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { NbToastrService, NbComponentStatus, NbDialogService } from '@nebular/theme';
 import { ShowcaseDialogComponent } from '../../components/showcase-dialog.component';
+import { tap, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'ngx-dashboard',
@@ -28,9 +30,14 @@ export class RoleManagementComponent {
   passwordLength = 8;
   //The roles object that will contain the user role options
   roles: string[];
+  //The email address used when searching for a user
   userEmailSearch: string;
+  //The searched for users role
   userEditRole: string;
+  //The loading state of the system
   loading = false;
+  //The flag to set when a searched for user has not been found
+  noResultsFound: boolean;
 
   @ViewChild('jeffery', { static: true }) accordion;
 
@@ -45,6 +52,14 @@ export class RoleManagementComponent {
     this.userRegistration.role = this.roles[0];
   }
 
+  isLoading() {
+    return this.loading;
+  }
+
+  setLoading(isLoading) {
+    this.loading = isLoading;
+  }
+
   generatePassword() {
     // Generate random password from array
     var newPassword = "";
@@ -54,10 +69,10 @@ export class RoleManagementComponent {
     this.userRegistration.password = newPassword;
   }
 
-  showToast(status: NbComponentStatus, email: String) {
+  showToast(status: NbComponentStatus, email: String, message: String) {
     this.toastrService.show(
-      `Account ${email} created`,
-      'Account Created!',
+      email,
+      message,
       { status });
   }
 
@@ -96,7 +111,7 @@ export class RoleManagementComponent {
     this.data$.toPromise().then((responce) => {
       console.log('created new user: ' + responce.result);
       //Great, we have a user created, reset the form now...
-      this.showToast('success', userEmail);
+      this.showToast('success', `Account ${userEmail} created`, 'Account Created!');
       this.submitted = false;
     }).catch((error) => {
       console.log('Error creating new user: ' + error);
@@ -107,18 +122,27 @@ export class RoleManagementComponent {
   }
 
   searchUser() {
-    this.loading = true;
+    this.noResultsFound = false;
+    this.setLoading(true);
     //Get a reference to the function
     const callable = this.angularFireFunctions.httpsCallable('getUser');
 
     var payload = {};
     payload['email'] = this.userEmailSearch;
 
-    this.user$ = callable(payload);
+    this.user$ = callable(payload).pipe(tap(ev => {
+      this.setLoading(false);
+      this.setRole(ev.record.customClaims);
+    })).pipe(catchError(err => {
+      this.setLoading(false);
+      this.noResultsFound = true;
+      console.log('Handling error locally and rethrowing it...', err);
+      return throwError(err);
+    }));
   }
 
   setAccountDisabled(uid, isDisabled) {
-    this.loading = true;
+    this.setLoading(true);
     //Get a reference to the function
     const callable = this.angularFireFunctions.httpsCallable('setAccountDisabled');
 
@@ -126,11 +150,14 @@ export class RoleManagementComponent {
     payload['isDisabled'] = isDisabled;
     payload['uid'] = uid;
 
-    this.user$ = callable(payload);
+    this.user$ = callable(payload).pipe(tap(ev => {
+      this.setLoading(false);
+      this.showToast('success', isDisabled ? 'Account Disabled!' : 'Account Enabled!', `Account Updated`);
+    }));
   }
 
   updateUserRole(uid) {
-    this.loading = true;
+    this.setLoading(true);
     //Get a reference to the function
     const callable = this.angularFireFunctions.httpsCallable('updateUserRole');
 
@@ -140,18 +167,26 @@ export class RoleManagementComponent {
       payload['role'] = this.userEditRole;
     }
 
-    this.user$ = callable(payload);
+    this.user$ = callable(payload).pipe(tap(ev => {
+      this.setLoading(false);
+      this.showToast('success', `Role changed to: ${this.userEditRole}`, `Account Updated`);
+    }));
   }
 
   setRole(role) {
-    var role;
+    var userRole;
     //Theres only one role for now, so looping through everything is fine.
     Object.keys(role).forEach(function (key) {
-      role = key;
+      userRole = key;
     });
 
-    //role = {Dealer: true}
-    this.userEditRole = role;
+    if (userRole != null) {
+      this.userEditRole = userRole;
+    }
+    else {
+      //If we have no role, then we're a plain old customer
+      this.userEditRole = 'Customer';
+    }
     return true;
   }
 
