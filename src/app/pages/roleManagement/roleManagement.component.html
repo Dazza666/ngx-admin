@@ -115,7 +115,7 @@
 
         </form>
 
-        <div *ngIf="user$ | async; then let userId else loadingTest">
+        <div *ngIf="user$ | async; then let userId">
           <nb-accordion>
             <nb-accordion-item>
               <nb-accordion-item-header>{{userId.record.email}} ({{userId.record.uid}})</nb-accordion-item-header>
