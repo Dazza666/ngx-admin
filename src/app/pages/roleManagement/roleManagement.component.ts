@@ -50,7 +50,7 @@ export class RoleManagementComponent {
     this.submitted = false;
     this.dictionaryArray = [].concat(this.dictionary.split(""));
     //Assign the roles that are available as selections
-    this.roles = ['Customer', 'Dealer', 'Admin',];
+    this.roles = ['Customer', 'Dealer', 'BRC', 'SBM', 'Admin',];
     //Set our default role
     this.userRegistration.role = this.roles[0];
   }

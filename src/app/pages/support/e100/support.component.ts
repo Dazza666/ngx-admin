@@ -27,6 +27,7 @@ export class SupportComponent {
   showLegend: boolean = true;
   showLabels: boolean = true;
   isDoughnut: boolean = false;
+  hasRejected: boolean;
   legendPosition: string = 'below';
   colorScheme = {
     domain: ['#A10A28', '#5AA454']
@@ -68,6 +69,10 @@ export class SupportComponent {
             //Do we have any shipped states?
             else if (item.status.state == 'shipped') {
               this.hasCompleted = true;
+            }
+            //Do we have any rejected states?
+            else if (item.status.state == 'rejected') {
+              this.hasRejected = true;
             }
           }
           this.stopLoading();

@@ -213,11 +213,20 @@
                             {{productDetails.getFormattedSerial()}}
                             <br>
                             {{productDetails.getFormattedBatteryExpiry()}}
+                            <br>
+                            {{productDetails.getFormattedHasARH100Mount()}}
+                            <br>
+                            {{productDetails.getFormattedARH100ManufactureDate()}}
                           </td>
                           <td class="text-center">
-                            <button nbButton status="info"
-                              (click)='generateImagePath(supportRequest.getUnformattedId(), productDetails)'>Load
-                              Image</button>
+                            <ng-container *ngIf="hasFailed(productDetails); then showRed; else showGreen">
+                            </ng-container>
+                            <ng-template #showRed>
+                              <nb-alert accent="danger" class="justify-content-center">{{productDetails.getFormattedResult()}}</nb-alert>
+                            </ng-template>
+                            <ng-template #showGreen>
+                              <nb-alert accent="success" class="justify-content-center">{{productDetails.getFormattedResult()}}</nb-alert>
+                            </ng-template>
                           </td>
                         </tr>
                       </tbody>
@@ -250,6 +259,84 @@
           </table>
         </ng-template>
       </nb-tab>
+      <nb-tab tabTitle="Rejected" tabIcon="archive-outline" responsive>
+        <ng-container *ngIf="hasRejected; then rejectedTable; else noRejectedData">
+        </ng-container>
+        <ng-template #noRejectedData>
+          <div>
+            <nb-alert accent="success" class="justify-content-center">There are currently no rejected support requests to
+              view</nb-alert>
+          </div>
+        </ng-template>
+        <ng-template #rejectedTable>
+          <!-- holds the rejected requests -->
+          <table class="supportTable w-auto">
+            <thead>
+              <tr class="text-center">
+                <th class="id d-none d-xl-table-cell">ID</th>
+                <th class="details">Details</th>
+                <th class="action">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let supportRequest of supportRequests;">
+                <tr *ngIf="supportRequest.status.state == 'rejected'">
+                  <th scope="row" class="d-none d-xl-table-cell">{{supportRequest.getId()}}</th>
+                  <td class="text-center">
+                    <!-- the inner table, which shows the product info like serial etc -->
+                    <table class="supportTable" width="50%">
+                      <tbody>
+                        <tr class="text-center" *ngFor="let productDetails of supportRequest['productInfo']">
+                          <td class="text-center">
+                            {{productDetails.getFormattedSerial()}}
+                            <br>
+                            {{productDetails.getFormattedBatteryExpiry()}}
+                            <br>
+                            {{productDetails.getFormattedHasARH100Mount()}}
+                            <br>
+                            {{productDetails.getFormattedARH100ManufactureDate()}}
+                          </td>
+                          <td class="text-center">
+                            <ng-container *ngIf="hasFailed(productDetails); then showRed; else showGreen">
+                            </ng-container>
+                            <ng-template #showRed>
+                              <nb-alert accent="danger" class="justify-content-center">{{productDetails.getFormattedResult()}}</nb-alert>
+                            </ng-template>
+                            <ng-template #showGreen>
+                              <nb-alert accent="success" class="justify-content-center">{{productDetails.getFormattedResult()}}</nb-alert>
+                            </ng-template>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <!-- the inner table, end -->
+                    {{supportRequest.getReplacementText()}}
+                    <br>
+                    <br>
+                    <div [innerHtml]="supportRequest.getAddress()"></div>
+                    <br>
+                    <div *ngIf="supportRequest.isAddressPerm() else notperm">
+                      <nb-alert accent="success" class="justify-content-center">Permanent Address</nb-alert>
+                    </div>
+                    <ng-template #notperm>
+                      <nb-alert accent="warning">supportRequest.getAddressValidRange()</nb-alert>
+                    </ng-template>
+                    {{supportRequest.getPhoneNumber()}}
+                    <br>
+                    <br>
+                    <a href="mailto:{{supportRequest.getEmail()}}">{{supportRequest.getEmail()}}</a>
+                  </td>
+                  <td class="text-center">
+                    <textarea #notes type="text" maxlength="3000">{{supportRequest.status.notes}}</textarea>
+                    <button nbButton fullWidth status="info" (click)='updateNotes(supportRequest.ref, notes.value)'>Update
+                      Notes</button>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </ng-template>
+      </nb-tab>      
       <nb-tab tabTitle="Passes" tabIcon="checkmark-outline" responsive>
         <ng-container *ngIf="hasPassed; then passedTable; else noPassedData">
         </ng-container>
