@@ -6,8 +6,9 @@
   <nb-card-body>
     <nb-tabset>
       <nb-tab tabTitle="Add Users" tabIcon="person-add-outline" responsive>
-        <form class="text-center" (ngSubmit)="createUser()" #form="ngForm" aria-labelledby="title">
-          <div *ngIf="!isLoading()">
+        <form class="text-center" (ngSubmit)="createUser(form)" #form="ngForm" aria-labelledby="title">
+          <!-- disabled this for now as prevents form from reset -->
+          <!-- <div *ngIf="!isLoading()"> -->
           <ng-container>
             <h6>To create a new user please enter the email address of the user you want to create, a password will be
               automatically generated (but you can change it if you want). Finally, select the role the user is to have
@@ -75,7 +76,7 @@
             </button>
             
           </ng-container>
-        </div>
+        <!-- </div> -->
           <div *ngIf="isLoading()">
             <nb-card [nbSpinner]="true" nbSpinnerSize="giant" nbSpinnerStatus="primary">
               <nb-card-body>

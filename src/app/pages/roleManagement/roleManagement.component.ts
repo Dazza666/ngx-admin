@@ -43,6 +43,7 @@ export class RoleManagementComponent {
   //The error message for user search
   errorMessage: any;
   @ViewChild('formEditUser', { static: false }) editUserForm: NgForm;
+  @ViewChild('form', { static: false }) addUserForm: NgForm;
 
   constructor(private fns: AngularFireFunctions, private toastrService: NbToastrService, private dialogService: NbDialogService) {
     this.angularFireFunctions = fns;
@@ -88,7 +89,7 @@ export class RoleManagementComponent {
     });
   }
 
-  createUser() {
+  createUser(form: NgForm) {
     this.submitted = true;
     this.setLoading(true);
     //Get a reference to the function
@@ -118,6 +119,7 @@ export class RoleManagementComponent {
       this.showToast('success', `Account ${userEmail} created`, 'Account Created!');
       this.submitted = false;
       this.setLoading(false);
+      form.reset();
     }).catch((error) => {
       console.log('Error creating new user: ' + error);
       this.showFailure(error, this.dialogService);
@@ -183,6 +185,11 @@ export class RoleManagementComponent {
   }
 
   setRole(role) {
+    //If we have no existing role, then default to customer for sake of UI.
+    if (role == null) {
+      this.userEditRole = 'Customer';
+      return true;
+    }
     var userRole;
     //Theres only one role for now, so looping through everything is fine.
     Object.keys(role).forEach(function (key) {
